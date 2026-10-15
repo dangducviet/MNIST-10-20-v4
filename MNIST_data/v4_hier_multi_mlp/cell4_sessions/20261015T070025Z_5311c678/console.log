@@ -1,0 +1,53 @@
+v4_MNIST_10_20 — CELL 4: Voronoi 20x20 + 2D-Fourier HierMLP (2,870,112 params) + Clean Anon + Full-Data + Multi-Hyp TTA | GPU: Tesla T4
+Đã lọc & sinh dữ liệu Vô danh sạch: 409/473 raw + 1227 strokes.
+Đang trích xuất Voronoi-Cleaned 20x20 Views cho 221,198 ảnh huấn luyện & 5 Giả thuyết TTA cho Test...
+Hoàn tất trích xuất Voronoi 20x20 trong 15.57s.
+HOÀN TẤT [Ultimate20x20 Fold 0] trong 269.9s | OOF Raw: 958/988 (96.96%) | OOF Capped_Style: 946/988 (95.75%) | NewWriters Capped: 101/103 (98.06%)
+HOÀN TẤT [Ultimate20x20 Fold 1] trong 270.2s | OOF Raw: 950/987 (96.25%) | OOF Capped_Style: 954/987 (96.66%) | NewWriters Capped: 96/97 (98.97%)
+HOÀN TẤT [Ultimate20x20 Fold 2] trong 265.6s | OOF Raw: 970/988 (98.18%) | OOF Capped_Style: 967/988 (97.87%) | NewWriters Capped: 59/61 (96.72%)
+HOÀN TẤT [Ultimate20x20 Fold 3] trong 266.3s | OOF Raw: 976/985 (99.09%) | OOF Capped_Style: 971/985 (98.58%) | NewWriters Capped: 112/114 (98.25%)
+HOÀN TẤT [Ultimate20x20 Fold 4] trong 265.7s | OOF Raw: 977/988 (98.89%) | OOF Capped_Style: 976/988 (98.79%) | NewWriters Capped: 76/76 (100.00%)
+HOÀN TẤT [Ultimate20x20 Full-Data 100%] trong 330.5s.
+
+================ CỔNG 1A: OOF 4.932 CAPPED_STYLE ================
+                   candidate    n  writers  correct  errors  micro_acc  macro_class  macro_writer
+        1_incumbent_v5_seed7 4932       94     4738     194   0.960665     0.960346      0.958153
+    2_hier_s7_18x18 (Cell 1) 4932       94     4817     115   0.976683     0.976627      0.969839
+ 3_mscale_s29_18x18 (Cell 2) 4932       94     4815     117   0.976277     0.976218      0.970164
+4_ult20_s2026_20x20 (Cell 4) 4932       94     4813     119   0.975872     0.975828      0.975223
+      5_hier15_pure_ensemble 4932       94     4819     113   0.977088     0.977082      0.971234
+  6_smooth_meta_gated_master 4932       94     4808     124   0.974858     0.974778      0.973919
+
+================ CỔNG 1B: OOF 4.932 RAW ================
+                   candidate    n  writers  correct  errors  micro_acc  macro_class  macro_writer
+        1_incumbent_v5_seed7 4932       94     4778     154   0.968775     0.968707      0.966286
+    2_hier_s7_18x18 (Cell 1) 4932       94     4825     107   0.978305     0.978347      0.972541
+ 3_mscale_s29_18x18 (Cell 2) 4932       94     4829     103   0.979116     0.979164      0.972470
+4_ult20_s2026_20x20 (Cell 4) 4932       94     4830     102   0.979319     0.979420      0.979182
+      5_hier15_pure_ensemble 4932       94     4831     101   0.979521     0.979563      0.973073
+  6_smooth_meta_gated_master 4932       94     4826     106   0.978508     0.978588      0.970674
+
+================ CỔNG 2 & 3: HELD-OUT 451 NEW WRITERS & TỔNG HỢP 5.383 MẪU ================
+               split            candidate    n  writers  correct  errors  micro_acc  macro_class  macro_writer
+ new451_capped_style    ult20_s2026_20x20  451       15      444       7   0.984479     0.985136      0.982598
+ new451_capped_style hier15_pure_ensemble  451       15      444       7   0.984479     0.984828      0.982598
+          new451_raw    ult20_s2026_20x20  451       15      447       4   0.991131     0.991750      0.989134
+          new451_raw hier15_pure_ensemble  451       15      445       6   0.986696     0.987007      0.985625
+all5383_capped_style hier15_pure_ensemble 5383      106     5263     120   0.977708     0.977689      0.972657
+         all5383_raw hier15_pure_ensemble 5383      106     5276     107   0.980123     0.980178      0.974818
+* submission_v4_cell4_ultimate_master.csv: class_counts = {10: 50, 11: 48, 12: 51, 13: 49, 14: 49, 15: 51, 16: 50, 17: 52, 18: 48, 19: 52, 20: 50}
+* submission_v4_cell4_pure_hier16_master.csv: class_counts = {10: 50, 11: 49, 12: 50, 13: 49, 14: 47, 15: 51, 16: 51, 17: 52, 18: 48, 19: 53, 20: 50}
+So với Cell 3 (0.96818): đổi 2 dòng -> IDs: [62, 162]
+  id= 62: Cell3(0.96818)=19 -> Cell4_Ultimate=20 (hier16_prob=0.486)
+  id=162: Cell3(0.96818)=16 -> Cell4_Ultimate=18 (hier16_prob=0.500)
+
+=== GỬI LẠI LOG NÀY VÀ FILE ZIP BÁO CÁO ===
+{
+  "status": "complete",
+  "active_pointer_changed": false,
+  "hier15_old4932_capped_style_correct": 4819,
+  "meta_old4932_capped_style_correct": 4808,
+  "hier15_old4932_raw_correct": 4831,
+  "all5383_raw_correct": 5276,
+  "elapsed_minutes": 28.39
+}

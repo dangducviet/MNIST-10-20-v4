@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "name": "v5_paired_renderer_baseline_ep24_v1",
+  "dataset_id": "82cc33f4f691",
+  "renderer_experiment_id": "b409f5a57688",
+  "bundle_sha256": "d7fda1458abef01f9fac0fd6daa7181f38cac173750eeed6d103c92681784ec8",
+  "files_sha256": {
+    "parent_train": "7e9b8b043be3a4fc4201e384b630a2acbd6ce7e52223d43a8a048e0f7f31a1c7",
+    "parent_validation": "3faeaf640e8ee1726e5986bddd5028195f6bf5ef5319c4b5535852737dd0bdc7",
+    "meta": "884e9e26b616b480da45b1b84ae622775f06af9351469ea5dc6f1fa120541476",
+    "strokes_capped": "a19885457cfef6126e9a0cf1dbd5b33862d0d22243e850885ff6870df1b353c8",
+    "validation_capped": "020c2a64300b50de642cfbf7e197303efd23e0faa2445a14c5dc477174572de6"
+  },
+  "width": [
+    512,
+    512,
+    256
+  ],
+  "batch_norm": true,
+  "activation": "GELU",
+  "dropout": 0.367,
+  "epochs": 24,
+  "batch_size": 128,
+  "lr": 0.00126,
+  "optimizer_initial_lr": "lr/2; OneCycleLR sets initial lr",
+  "weight_decay": 1.8e-05,
+  "label_smoothing": 0.0,
+  "optimizer": "AdamW",
+  "scheduler": "OneCycleLR",
+  "pct_start": 0.1,
+  "div_factor": 25.0,
+  "final_div_factor": 10000.0,
+  "seed_rule": "100*fold+7",
+  "precision": "float32",
+  "deterministic": true,
+  "matmul_tf32": false,
+  "torch_version": "2.11.0+cu130",
+  "cuda_version": "13.0",
+  "gpu_name": "Tesla T4",
+  "numpy_version": "2.1.3",
+  "variant_policy": "control parent; capped replace strokes only",
+  "validation_policy": "report_only; fixed final epoch24; no best-epoch selection",
+  "inference": {
+    "domains": [
+      "raw",
+      "old_style",
+      "capped_style"
+    ],
+    "modes": [
+      "plain",
+      "shift9"
+    ],
+    "shifts": [
+      -1,
+      0,
+      1
+    ],
+    "padding": "zero",
+    "reduction": "mean softmax probabilities",
+    "shifts_at_final_only": true
+  },
+  "checkpoint_every": 2,
+  "checkpoint_boundary": "end of epoch"
+}

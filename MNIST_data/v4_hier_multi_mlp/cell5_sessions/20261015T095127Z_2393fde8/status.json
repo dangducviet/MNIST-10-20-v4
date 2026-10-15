@@ -1,0 +1,11 @@
+{
+  "status": "complete",
+  "active_pointer_changed": false,
+  "old4932_capped_style_correct": 4821,
+  "old4932_raw_correct": 4831,
+  "all5383_capped_style_correct": 5265,
+  "all5383_raw_correct": 5276,
+  "surgical_swaps_count": 1,
+  "balanced_swaps_count": 1,
+  "elapsed_minutes": 4.39
+}

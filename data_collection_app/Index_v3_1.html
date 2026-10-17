@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Viết số · 33 mẫu</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#10151d;color:#e8edf5;font:16px system-ui,sans-serif}.wrap{max-width:560px;margin:auto;padding:24px 16px}h1{font-size:24px;margin:6px 0 12px}.tag{color:#7dd3fc;font-size:12px;letter-spacing:.12em}p{line-height:1.55;color:#b9c5d5;font-size:14px}label{display:block;font-size:14px;margin-top:12px}input{display:block;width:100%;padding:12px;margin-top:6px;border:1px solid #43516a;background:#192332;border-radius:10px;color:#fff;font:inherit}button{padding:13px 16px;border:1px solid #48566c;border-radius:10px;background:#202d40;color:#fff;font:inherit;cursor:pointer}button:disabled{opacity:.45;cursor:default}.primary{background:#137a57;border-color:#30bd8a;font-weight:700}.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.buttons>*{flex:1}#start{width:100%;margin-top:16px}#num{font-size:64px;font-weight:750;color:#7dd3fc;line-height:1.1}.top{display:flex;justify-content:space-between;align-items:center;margin-top:22px}#pad{width:100%;height:auto;display:block;background:#000;border:2px solid #43516a;border-radius:12px;touch-action:none;user-select:none;-webkit-user-select:none;margin-top:12px}#progress{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:14px}.chip{text-align:center;padding:7px 2px;border-radius:7px;background:#202b3b;font-size:12px}.done{background:#154a39}.current{outline:2px solid #7dd3fc}#status,#notice{white-space:pre-line;line-height:1.5;font-size:14px;margin-top:14px}#notice{color:#f9cd79}#status{color:#a8dace}small{font-size:12px;color:#aab8cb}progress{width:100%;accent-color:#34d399;margin-top:12px}footer{border-top:1px solid #344054;margin-top:22px;padding-top:12px}[hidden]{display:none!important}
+</style></head><body><main class="wrap">
+<div class="tag">MNIST 10–20 · THU CHỮ VIẾT TAY</div><h1>Mỗi nét viết đều có ích</h1>
+<p>Viết đủ 11 số, mỗi số 3 lần: tổng cộng <strong>33 mẫu</strong>. Viết tự nhiên bằng ngón tay; không chép theo kiểu chữ hiển thị.</p>
+<section id="identity"><label for="name">Tên của bạn</label><input id="name" maxlength="80" placeholder="Nhập họ và tên" autocomplete="name">
+<small>Lần sau bạn dùng lại đúng tên này để viết tiếp.</small><button id="start" class="primary">Bắt đầu viết</button></section>
+<section id="work" hidden><div class="top"><div><small>Hãy viết số</small><div id="num">10</div></div><div><strong id="total">0 / 33</strong><br><small id="who"></small></div></div>
+<progress id="bar" value="0" max="33"></progress><div id="progress"></div>
+<canvas id="pad" width="600" height="400" aria-label="Khung viết số bằng ngón tay hoặc bút"></canvas>
+<div class="buttons"><button id="clear">Xóa nét</button><button id="save" class="primary">Lưu mẫu →</button></div>
+<p>Viết to, chừa mép khung để không mất nét. Không cần đẹp hoặc căn giữa. Nếu viết nhầm số được yêu cầu, bấm Xóa nét rồi viết lại.</p>
+<div class="buttons"><button id="sync">Đồng bộ</button><button id="change">Đổi người viết</button></div></section>
+<div id="status" role="status" aria-live="polite"></div><div id="notice" role="alert"></div>
+<footer><button id="backup">Tải bản dự phòng JSON</button><p><small>Chỉ đóng trang khi các mẫu đã gửi xong. Nếu gặp lỗi, tải bản dự phòng và gửi cho người thu thập. Dữ liệu gồm tên, ảnh và nét vẽ; được dùng cho dự án nhận dạng chữ số.</small></p></footer>
+</main><script>
+(function () {
+'use strict';
+var $ = function(id){return document.getElementById(id);};
+var W=600,H=400,VERSION='3.1',KEY='viet_so_v31_state';
+var hasGS=typeof google!=='undefined' && google.script && google.script.run;
+var pad=$('pad'),ctx=pad.getContext('2d',{willReadFrequently:true});
+var strokes=[],cur=null,drawing=false,activePointer=null,label=null,pen=36,writer=null;
+var sending=false,syncing=false,storageOK=true,retryTimer=null,blocked=false;
+var state={version:VERSION,active:'',people:{},records:[]},rawState=null,legacyQueue=null;
+function notice(s){$('notice').textContent=s||'';}
+function copy(o){return JSON.parse(JSON.stringify(o));}
+function validState(s){return s && s.version===VERSION && s.people && typeof s.people==='object' && Array.isArray(s.records) && s.records.every(r=>r && r.payload && typeof r.payload.sample_id==='string' && ['pending','sent','error'].indexOf(r.status)>=0) && Object.keys(s.people).every(k=>s.people[k] && Array.isArray(s.people[k].remote));}
+try {
+ rawState=localStorage.getItem(KEY);
+ if(rawState){var parsed=JSON.parse(rawState);if(!validState(parsed))throw new Error('Dữ liệu đã lưu không đúng cấu trúc');state=parsed;}
+ localStorage.setItem(KEY,JSON.stringify(state));
+ legacyQueue=localStorage.getItem('viet_so_queue_v1');
+ if(legacyQueue && legacyQueue!=='[]') notice('Thiết bị còn hàng chờ của bản cũ. Tải bản dự phòng và gửi người thu thập; bản mới không tự chuyển hoặc xóa các mẫu cũ.');
+}catch(e){storageOK=false;notice('Không đọc/ghi được bộ nhớ trình duyệt. Chưa thu mẫu mới. Tải bản dự phòng, rồi liên hệ người thu thập.');}
+function commit(next){
+ if(!storageOK)return false;
+ try{localStorage.setItem(KEY,JSON.stringify(next));state=next;return true;}
+ catch(e){storageOK=false;notice('Bộ nhớ không lưu được. Nét hiện tại được giữ; tải bản dự phòng trước khi đóng trang.');render();return false;}
+}
+function id(){
+ if(!window.crypto || !window.crypto.getRandomValues)throw new Error('Trình duyệt không hỗ trợ tạo mã mẫu an toàn.');
+ var a=new Uint8Array(16);window.crypto.getRandomValues(a);return Array.from(a).map(v=>v.toString(16).padStart(2,'0')).join('');
+}
+function counts(){
+ var c=Array(11).fill(0),seen=new Set();if(!writer)return c;
+ var person=state.people[writer];
+ (person?person.remote:[]).forEach(r=>{if(!seen.has(r.sample_id)){seen.add(r.sample_id);c[r.label-10]++;}});
+ state.records.forEach(r=>{var p=r.payload;if(p.writer===writer && r.status!=='error' && !seen.has(p.sample_id)){seen.add(p.sample_id);c[p.label-10]++;}});
+ return c;
+}
+function render(){
+ $('start').disabled=!storageOK || syncing;
+ $('sync').disabled=syncing || !writer;
+ $('change').disabled=syncing;
+ var pending=state.records.filter(r=>r.status==='pending').length,errors=state.records.filter(r=>r.status==='error').length;
+ var text='';
+ if(writer){
+  var c=counts(),total=c.reduce((a,b)=>a+b,0),remote=state.people[writer].remote.length;
+  $('total').textContent=total+' / 33';$('bar').value=total;
+  $('who').textContent=state.people[writer].name;
+  $('progress').replaceChildren();
+  c.forEach((n,i)=>{var d=document.createElement('div');d.className='chip'+(n>=3?' done':'')+(label===i+10?' current':'');d.textContent=(i+10)+' · '+n+'/3';$('progress').appendChild(d);});
+  text='Đã gửi thành công: '+remote+' mẫu.';
+  if(total===33)text+=(remote>=33?'\nĐã gửi đủ 33 mẫu. Cảm ơn bạn!':'\nĐã viết đủ 33 mẫu; hãy chờ gửi hết trước khi đóng trang.');
+ }
+ if(pending)text+='\nCòn '+pending+' mẫu đang chờ gửi trên thiết bị.';
+ if(errors)text+='\nCó '+errors+' mẫu cần kiểm tra; đã giữ trong bản dự phòng.';
+ if(!hasGS)text+='\nBản xem trên máy: cần mở link web app Apps Script để thu và gửi mẫu.';
+ $('status').textContent=text;
+ $('save').disabled=!writer || label===null || !storageOK || syncing;
+ $('clear').disabled=!writer || label===null;
+}
+function newSample(){
+ endStroke();strokes=[];
+ var c=counts(),min=Math.min.apply(null,c);
+ if(min>=3){label=null;$('num').textContent='✓';}
+ else{var choices=[];c.forEach((n,i)=>{if(n===min)choices.push(i+10);});label=choices[Math.floor(Math.random()*choices.length)];$('num').textContent=label;}
+ pen=28+Math.floor(Math.random()*25);redraw();render();
+}
+  function clearCanvas() { ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); }
+  function redraw() {
+    clearCanvas();
+    ctx.strokeStyle = '#fff'; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    strokes.forEach(function (s) {
+      ctx.lineWidth = s.w; ctx.beginPath();
+      ctx.moveTo(s.p[0][0], s.p[0][1]);
+      if (s.p.length === 1) ctx.lineTo(s.p[0][0] + 0.01, s.p[0][1]);
+      for (var i = 1; i < s.p.length; i++) ctx.lineTo(s.p[i][0], s.p[i][1]);
+      ctx.stroke();
+    });
+  }
+  function grayFromCanvas() {
+    var d = ctx.getImageData(0, 0, W, H).data, g = new Float32Array(W * H);
+    for (var i = 0; i < W * H; i++) g[i] = d[i * 4];
+    return g;
+  }
+  function resizeArea(src, sw, sh, dw, dh) {
+    var out = new Float32Array(dw * dh), xs = sw / dw, ys = sh / dh;
+    for (var y = 0; y < dh; y++) {
+      var y0 = y * ys, y1 = (y + 1) * ys;
+      for (var x = 0; x < dw; x++) {
+        var x0 = x * xs, x1 = (x + 1) * xs, sum = 0, wsum = 0;
+        for (var sy = Math.floor(y0); sy < Math.min(Math.ceil(y1), sh); sy++) {
+          var wy = Math.min(sy + 1, y1) - Math.max(sy, y0);
+          for (var sx = Math.floor(x0); sx < Math.min(Math.ceil(x1), sw); sx++) {
+            var wx = Math.min(sx + 1, x1) - Math.max(sx, x0), w = wx * wy;
+            sum += src[sy * sw + sx] * w; wsum += w;
+          }
+        }
+        out[y * dw + x] = wsum > 0 ? sum / wsum : 0;
+      }
+    }
+    return out;
+  }
+  function toMNIST(g) {
+    var minx = W, miny = H, maxx = -1, maxy = -1, x, y;
+    for (y = 0; y < H; y++) for (x = 0; x < W; x++) {
+      if (g[y * W + x] > 20) { if (x < minx) minx = x; if (x > maxx) maxx = x; if (y < miny) miny = y; if (y > maxy) maxy = y; }
+    }
+    if (maxx < 0) return null;
+    var cw = maxx - minx + 1, ch = maxy - miny + 1;
+    var crop = new Float32Array(cw * ch);
+    for (y = 0; y < ch; y++) for (x = 0; x < cw; x++) crop[y * cw + x] = g[(miny + y) * W + (minx + x)];
+    var s = Math.min(20 / cw, 20 / ch);
+    var tw = Math.max(1, Math.round(cw * s)), th = Math.max(1, Math.round(ch * s));
+    var small = resizeArea(crop, cw, ch, tw, th);
+    var mx = 0, i;
+    for (i = 0; i < small.length; i++) if (small[i] > mx) mx = small[i];
+    if (mx <= 0) return null;
+    for (i = 0; i < small.length; i++) small[i] = small[i] * 255 / mx;
+    var sm = 0, sxm = 0, sym = 0;
+    for (y = 0; y < th; y++) for (x = 0; x < tw; x++) { var v = small[y * tw + x]; sm += v; sxm += (x + 0.5) * v; sym += (y + 0.5) * v; }
+    var ox = Math.round(14 - sxm / sm), oy = Math.round(14 - sym / sm);
+    ox = Math.max(0, Math.min(28 - tw, ox)); oy = Math.max(0, Math.min(28 - th, oy));
+    var out = new Array(784);
+    for (i = 0; i < 784; i++) out[i] = 0;
+    for (y = 0; y < th; y++) for (x = 0; x < tw; x++) out[(oy + y) * 28 + (ox + x)] = Math.max(0, Math.min(255, Math.round(small[y * tw + x])));
+    return out;
+  }
+
+
+function pt(e){var r=pad.getBoundingClientRect(),b=pad.clientLeft;return [(e.clientX-r.left-b)*W/pad.clientWidth,(e.clientY-r.top-pad.clientTop)*H/pad.clientHeight];}
+pad.addEventListener('contextmenu',e=>e.preventDefault());
+pad.addEventListener('pointerdown',function(e){
+ if(!writer || label===null || !storageOK || syncing || drawing || e.isPrimary===false || (e.pointerType==='mouse' && e.button!==0))return;
+ e.preventDefault();activePointer=e.pointerId;drawing=true;
+ try{pad.setPointerCapture(e.pointerId);}catch(x){}
+ var p=pt(e);cur={w:pen,p:[p]};strokes.push(cur);redraw();
+});
+pad.addEventListener('pointermove',function(e){
+ if(!drawing || e.pointerId!==activePointer || !cur)return;
+ e.preventDefault();var p=pt(e),last=cur.p[cur.p.length-1];
+ if(Math.hypot(p[0]-last[0],p[1]-last[1])<2)return;
+ ctx.strokeStyle='#fff';ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=cur.w;
+ ctx.beginPath();ctx.moveTo(last[0],last[1]);ctx.lineTo(p[0],p[1]);ctx.stroke();cur.p.push(p);
+});
+function endStroke(e){if(e && e.pointerId!==activePointer)return;drawing=false;cur=null;activePointer=null;}
+pad.addEventListener('pointerup',endStroke);pad.addEventListener('pointercancel',endStroke);pad.addEventListener('lostpointercapture',endStroke);
+function validRemote(r,w){return r && r.version===VERSION && r.writer===w && Array.isArray(r.samples) && r.samples.every(x=>typeof x.sample_id==='string' && Number.isInteger(x.label) && x.label>=10 && x.label<=20) && new Set(r.samples.map(x=>x.sample_id)).size===r.samples.length;}
+function syncPerson(w,name,opening){
+ if(!hasGS){notice('Mở link web app Apps Script để bắt đầu. File tải về chỉ để dán vào Apps Script.');return;}
+ if(!storageOK || syncing)return;
+ syncing=true;render();notice('Đang mở trang viết…');
+ google.script.run.withSuccessHandler(function(r){
+  syncing=false;
+  if(!validRemote(r,w)){blocked=true;notice('Phiên bản server không khớp HTML v3.1. Hãy cập nhật cả Code.gs và bản triển khai.');render();return;}
+  var next=copy(state),old=next.people[w];
+  next.people[w]={name:name || (old && old.name) || '',remote:r.samples};next.active=w;
+  var ids=new Set(r.samples.map(x=>x.sample_id));
+  next.records.forEach(x=>{if(x.payload.writer===w && ids.has(x.payload.sample_id))x.status='sent';});
+  if(!commit(next))return;
+  writer=w;blocked=false;$('identity').hidden=true;$('work').hidden=false;
+  // Preserve unfinished drawing on an ordinary sync, unless that class is now full.
+  if(opening || label===null || counts()[label-10]>=3)newSample();else render();
+  notice('');flush();
+ }).withFailureHandler(function(err){syncing=false;notice('Chưa đồng bộ được: '+String(err.message||err)+'. Kiểm tra kết nối rồi thử lại.');render();}).getWriterProgress(w);
+}
+function flush(){
+ if(sending || blocked || !storageOK || !hasGS)return;
+ var rec=state.records.find(r=>r.status==='pending');if(!rec){render();return;}
+ sending=true;var p=rec.payload;
+ google.script.run.withSuccessHandler(function(r){
+  sending=false;
+  if(!r || r.version!==VERSION || r.sample_id!==p.sample_id || r.writer!==p.writer || r.label!==p.label){blocked=true;notice('Phản hồi server không đúng v3.1. Giữ hàng chờ, tải dự phòng và báo người thu thập.');render();return;}
+  var next=copy(state),found=next.records.find(x=>x.payload.sample_id===p.sample_id);found.status='sent';
+  var person=next.people[p.writer];if(!person.remote.some(x=>x.sample_id===p.sample_id))person.remote.push({sample_id:p.sample_id,label:p.label});
+  if(!commit(next))return;render();flush();
+ }).withFailureHandler(function(err){
+  sending=false;var message=String(err.message||err);
+  if(/INVALID:|QUOTA:/.test(message)){
+   var next=copy(state),r=next.records.find(x=>x.payload.sample_id===p.sample_id);r.status='error';r.error=message;
+   if(!commit(next))return;
+   notice('Một mẫu cần kiểm tra, không bị xóa: '+message+' Tải bản dự phòng và báo người thu thập.');
+   if(writer===p.writer && !strokes.length)newSample();else render();
+   flush();return;
+  }
+  notice('Chưa gửi được. Mẫu đã lưu trên thiết bị và sẽ thử lại. '+message);render();
+  clearTimeout(retryTimer);retryTimer=setTimeout(flush,6000);
+ }).saveSample(p);
+}
+// Same normalized full name gives the same hidden ID across devices.
+// Equal names are conservatively grouped; a name alone cannot distinguish two people.
+function normalizedName(name){return name.normalize('NFC').replace(/\s+/g,' ').trim().toLowerCase();}
+$('start').onclick=async function(){
+ if(syncing || !storageOK)return;
+ var name=$('name').value.normalize('NFC').replace(/\s+/g,' ').trim();
+ if(!name){notice('Bạn nhập tên trước khi bắt đầu nhé.');$('name').focus();return;}
+ syncing=true;render();
+ try {
+  var bytes=new TextEncoder().encode('viet-so-name-v1:'+normalizedName(name));
+  var hash=await window.crypto.subtle.digest('SHA-256',bytes);
+  var w='nm-'+Array.from(new Uint8Array(hash)).map(v=>v.toString(16).padStart(2,'0')).join('').slice(0,32);
+  syncing=false;syncPerson(w,name,true);
+ } catch(e){syncing=false;notice('Chưa mở được trang viết. Hãy thử lại trong Chrome hoặc Safari.');render();}
+};
+$('name').addEventListener('keydown',function(e){if(e.key==='Enter')$('start').onclick();});
+$('clear').onclick=function(){endStroke();strokes=[];redraw();notice('');};
+$('save').onclick=function(){
+ if(!writer || label===null || !storageOK || syncing)return;
+ endStroke();if(!strokes.length){notice('Bạn chưa viết gì.');return;}
+ var px=toMNIST(grayFromCanvas());if(!px){notice('Chưa có nét trong khung.');return;}
+ var lines={c:[W,H],s:strokes.map(s=>({w:s.w,p:[].concat.apply([],s.p).map(Math.round)}))};
+ if(JSON.stringify(lines).length>45000){notice('Mẫu quá nhiều nét để gửi. Hãy tải bản dự phòng trước khi xóa và viết lại.');return;}
+ var sampleId;try{sampleId=id();}catch(e){notice(e.message);return;}
+ var p={sample_id:sampleId,collector_version:VERSION,writer:writer,writer_name:state.people[writer].name,label:label,px:px,strokes:lines};
+ var next=copy(state);next.records.push({status:'pending',payload:p});
+ if(!commit(next))return;
+ notice('');newSample();flush();
+};
+$('sync').onclick=function(){if(writer)syncPerson(writer,state.people[writer].name,false);};
+$('change').onclick=function(){
+ if(strokes.length && !confirm('Bỏ nét chưa lưu để đổi người viết?'))return;
+ endStroke();strokes=[];redraw();writer=null;label=null;
+ $('identity').hidden=false;$('work').hidden=true;$('name').value='';notice('');render();$('name').focus();
+};
+$('backup').onclick=function(){
+ var draft=strokes.length?{writer:writer,label:label,px:toMNIST(grayFromCanvas()),strokes:{c:[W,H],s:strokes.map(s=>({w:s.w,p:[].concat.apply([],s.p).map(Math.round)}))}}:null;
+ var blob=new Blob([JSON.stringify({version:VERSION,exported_at:new Date().toISOString(),state:state,unreadable_original:storageOK?null:rawState,legacy_queue:legacyQueue,draft:draft})],{type:'application/json'});
+ var url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='viet-so-v31-backup-'+Date.now()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+window.addEventListener('online',flush);
+window.addEventListener('beforeunload',function(e){if(strokes.length || state.records.some(r=>r.status==='pending' || r.status==='error')){e.preventDefault();e.returnValue='';}});
+window.addEventListener('storage',function(e){if(e.key===KEY){storageOK=false;blocked=true;notice('Dữ liệu đã đổi ở tab khác. Tải dự phòng nếu còn nét chưa lưu, rồi đóng tab này; chỉ dùng một tab thu chữ.');render();}});
+$('name').value=state.people[state.active]?state.people[state.active].name:'';
+redraw();render();
+})();
+</script></body></html>

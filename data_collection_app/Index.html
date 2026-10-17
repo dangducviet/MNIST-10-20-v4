@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Viết số</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: #0f1216; color: #e8eaed; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 520px; margin: 0 auto; padding: 14px 16px 28px; }
+  .top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+  .ask { font-size: 14px; color: #9aa0a6; }
+  #num { font-size: 56px; font-weight: 700; line-height: 1; color: #7dd3fc; letter-spacing: 1px; font-variant-numeric: tabular-nums; }
+  input#writer { width: 170px; padding: 8px 10px; border-radius: 8px; border: 1px solid #333a42; background: #171b21; color: #e8eaed; font-size: 14px; }
+  input#writer.err { border-color: #ef4444; box-shadow: 0 0 0 2px rgba(239, 68, 68, .35); }
+  canvas#pad { width: 100%; height: auto; display: block; margin-top: 12px; background: #000; border: 2px solid #3b434c; border-radius: 12px; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .btns { display: flex; gap: 10px; margin-top: 12px; }
+  button { padding: 14px 10px; border-radius: 12px; border: 1px solid #333a42; background: #171b21; color: #e8eaed; font-size: 16px; cursor: pointer; }
+  button#clear { flex: 1; }
+  button#save { flex: 2; background: #15803d; border-color: #22c55e; font-weight: 600; }
+  button:active { filter: brightness(1.25); }
+  .status { margin-top: 12px; font-size: 13px; color: #9aa0a6; min-height: 18px; }
+  .hint { margin-top: 6px; font-size: 12px; color: #6b7280; line-height: 1.45; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <div class="ask">Hãy viết số</div>
+      <div id="num">10</div>
+    </div>
+    <input type="text" id="writer" placeholder="Tên của bạn" autocomplete="off" maxlength="40" required>
+  </div>
+
+  <canvas id="pad"></canvas>
+
+  <div class="btns">
+    <button id="clear">Xóa</button>
+    <button id="save">Lưu mẫu</button>
+  </div>
+  <div class="status" id="status"></div>
+  <div class="hint">Nhập tên của bạn ở góc trên (chỉ cần nhập một lần). Viết cả số bằng ngón tay, tự nhiên, to gần hết khung, không cần căn giữa. Bấm Lưu mẫu là xong, số tiếp theo sẽ hiện ra.</div>
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var W = 600, H = 400;
+  var LABELS = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+  var QKEY = 'viet_so_queue_v1', WKEY = 'viet_so_writer';
+  var hasGS = typeof google !== 'undefined' && google.script && google.script.run;
+
+  var pad = $('pad'), ctx = pad.getContext('2d', { willReadFrequently: true });
+  pad.width = W; pad.height = H;
+
+  var strokes = [], cur = null, drawing = false;
+  var bag = [], label = 10, pen = 24;
+  var queue = [], sending = false, sent = 0;
+
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  // ---- số cần viết: lấy ngẫu nhiên theo túi (mỗi vòng đủ 11 số) ----
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function nextLabel() { if (!bag.length) bag = shuffle(LABELS.slice()); return bag.pop(); }
+  function newSample() {
+    label = nextLabel();
+    pen = 16 + Math.floor(Math.random() * 19); // độ dày nét thay đổi mỗi mẫu
+    $('num').textContent = label;
+    strokes = []; redraw();
+  }
+
+  // ---- vẽ ----
+  function clearCanvas() { ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); }
+  function redraw() {
+    clearCanvas();
+    ctx.strokeStyle = '#fff'; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    strokes.forEach(function (s) {
+      ctx.lineWidth = s.w; ctx.beginPath();
+      ctx.moveTo(s.p[0][0], s.p[0][1]);
+      if (s.p.length === 1) ctx.lineTo(s.p[0][0] + 0.01, s.p[0][1]);
+      for (var i = 1; i < s.p.length; i++) ctx.lineTo(s.p[i][0], s.p[i][1]);
+      ctx.stroke();
+    });
+  }
+  function pt(e) {
+    var r = pad.getBoundingClientRect();
+    return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height];
+  }
+  pad.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  pad.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    try { pad.setPointerCapture(e.pointerId); } catch (x) {}
+    drawing = true;
+    var p = pt(e);
+    cur = { w: pen, p: [p] };
+    strokes.push(cur);
+    ctx.strokeStyle = '#fff'; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = cur.w;
+    ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(p[0] + 0.01, p[1]); ctx.stroke();
+  });
+  pad.addEventListener('pointermove', function (e) {
+    if (!drawing) return;
+    e.preventDefault();
+    var p = pt(e), last = cur.p[cur.p.length - 1];
+    if (Math.hypot(p[0] - last[0], p[1] - last[1]) < 2) return;
+    ctx.beginPath(); ctx.moveTo(last[0], last[1]); ctx.lineTo(p[0], p[1]); ctx.stroke();
+    cur.p.push(p);
+  });
+  function endStroke() { drawing = false; cur = null; }
+  pad.addEventListener('pointerup', endStroke);
+  pad.addEventListener('pointercancel', endStroke);
+
+  // ---- chuẩn hóa về 28x28 (kiểu MNIST: vừa khung 20x20, căn trọng tâm) ----
+  function grayFromCanvas() {
+    var d = ctx.getImageData(0, 0, W, H).data, g = new Float32Array(W * H);
+    for (var i = 0; i < W * H; i++) g[i] = d[i * 4];
+    return g;
+  }
+  function resizeArea(src, sw, sh, dw, dh) {
+    var out = new Float32Array(dw * dh), xs = sw / dw, ys = sh / dh;
+    for (var y = 0; y < dh; y++) {
+      var y0 = y * ys, y1 = (y + 1) * ys;
+      for (var x = 0; x < dw; x++) {
+        var x0 = x * xs, x1 = (x + 1) * xs, sum = 0, wsum = 0;
+        for (var sy = Math.floor(y0); sy < Math.min(Math.ceil(y1), sh); sy++) {
+          var wy = Math.min(sy + 1, y1) - Math.max(sy, y0);
+          for (var sx = Math.floor(x0); sx < Math.min(Math.ceil(x1), sw); sx++) {
+            var wx = Math.min(sx + 1, x1) - Math.max(sx, x0), w = wx * wy;
+            sum += src[sy * sw + sx] * w; wsum += w;
+          }
+        }
+        out[y * dw + x] = wsum > 0 ? sum / wsum : 0;
+      }
+    }
+    return out;
+  }
+  function toMNIST(g) {
+    var minx = W, miny = H, maxx = -1, maxy = -1, x, y;
+    for (y = 0; y < H; y++) for (x = 0; x < W; x++) {
+      if (g[y * W + x] > 20) { if (x < minx) minx = x; if (x > maxx) maxx = x; if (y < miny) miny = y; if (y > maxy) maxy = y; }
+    }
+    if (maxx < 0) return null;
+    var cw = maxx - minx + 1, ch = maxy - miny + 1;
+    var crop = new Float32Array(cw * ch);
+    for (y = 0; y < ch; y++) for (x = 0; x < cw; x++) crop[y * cw + x] = g[(miny + y) * W + (minx + x)];
+    var s = Math.min(20 / cw, 20 / ch);
+    var tw = Math.max(1, Math.round(cw * s)), th = Math.max(1, Math.round(ch * s));
+    var small = resizeArea(crop, cw, ch, tw, th);
+    var mx = 0, i;
+    for (i = 0; i < small.length; i++) if (small[i] > mx) mx = small[i];
+    if (mx <= 0) return null;
+    for (i = 0; i < small.length; i++) small[i] = small[i] * 255 / mx;
+    var sm = 0, sxm = 0, sym = 0;
+    for (y = 0; y < th; y++) for (x = 0; x < tw; x++) { var v = small[y * tw + x]; sm += v; sxm += (x + 0.5) * v; sym += (y + 0.5) * v; }
+    var ox = Math.round(14 - sxm / sm), oy = Math.round(14 - sym / sm);
+    ox = Math.max(0, Math.min(28 - tw, ox)); oy = Math.max(0, Math.min(28 - th, oy));
+    var out = new Array(784);
+    for (i = 0; i < 784; i++) out[i] = 0;
+    for (y = 0; y < th; y++) for (x = 0; x < tw; x++) out[(oy + y) * 28 + (ox + x)] = Math.max(0, Math.min(255, Math.round(small[y * tw + x])));
+    return out;
+  }
+
+  // ---- gửi lên Google Sheet (mỗi mẫu = 1 dòng) ----
+  function updateStatus(msg) {
+    var t = 'Đã gửi ' + sent + ' mẫu';
+    if (queue.length) t += ' · đang chờ gửi ' + queue.length;
+    if (!hasGS) t += ' · (chưa kết nối Google Sheet)';
+    $('status').textContent = msg ? msg : t;
+  }
+  function persistQueue() { lsSet(QKEY, JSON.stringify(queue)); }
+  function flush() {
+    if (sending || !queue.length || !hasGS) return;
+    sending = true;
+    var item = queue[0];
+    google.script.run
+      .withSuccessHandler(function () {
+        queue.shift(); sent++; sending = false; persistQueue(); updateStatus(); flush();
+      })
+      .withFailureHandler(function (err) {
+        sending = false;
+        if (err && /INVALID/.test(String(err.message || err))) { queue.shift(); persistQueue(); updateStatus(); flush(); return; }
+        updateStatus('Mất kết nối, sẽ tự gửi lại · chờ gửi ' + queue.length);
+        setTimeout(flush, 6000);
+      })
+      .saveSample(item);
+  }
+
+  $('clear').onclick = function () { strokes = []; redraw(); };
+  // Chuẩn hóa tên: bỏ khoảng trắng thừa, chữ thường, để "Lan" và "lan " là cùng một người
+  function cleanName() { return ($('writer').value || '').replace(/\s+/g, ' ').trim().toLowerCase(); }
+  $('writer').addEventListener('input', function () { $('writer').classList.remove('err'); });
+
+  $('save').onclick = function () {
+    if (!cleanName()) {
+      $('writer').classList.add('err'); $('writer').focus();
+      updateStatus('Hãy nhập tên của bạn trước khi lưu');
+      return;
+    }
+    if (!strokes.length) { updateStatus('Chưa viết gì cả'); return; }
+    var px = toMNIST(grayFromCanvas());
+    if (!px) { updateStatus('Nét quá nhạt, viết lại nhé'); return; }
+    queue.push({
+      label: label,
+      writer: cleanName(),
+      px: px,
+      strokes: { c: [W, H], s: strokes.map(function (s) { return { w: s.w, p: [].concat.apply([], s.p).map(Math.round) }; }) }
+    });
+    persistQueue();
+    newSample();
+    updateStatus();
+    flush();
+  };
+
+  $('writer').value = lsGet(WKEY) || '';
+  $('writer').addEventListener('input', function () { lsSet(WKEY, $('writer').value); });
+  try { var q = JSON.parse(lsGet(QKEY) || '[]'); if (Array.isArray(q)) queue = q; } catch (e) { queue = []; }
+
+  newSample(); updateStatus(); flush();
+})();
+</script>
+</body>
+</html>

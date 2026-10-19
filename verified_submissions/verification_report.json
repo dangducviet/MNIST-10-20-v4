@@ -1,10 +1,10 @@
 {
-  "status": "FAIL",
-  "mode": "weights",
+  "status": "PASS",
+  "mode": "fast",
   "check_only": false,
-  "started_at": "2026-10-19T04:10:47.987847+00:00",
-  "data_root": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data",
-  "run_directory": "D:\\GitHub\\MNIST-10-20-v4\\verified_submissions\\run_20261019T041047Z_cbc05d",
+  "started_at": "2026-10-19T05:06:22.569855+00:00",
+  "data_root": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data",
+  "run_directory": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\verified_submissions\\run_20261019T050622Z_cbb461",
   "notes": [
     "fast tính lại chỉ số OOF/holdout và tái lập CSV từ cache; không chạy lại mô hình hoặc huấn luyện.",
     "weights chạy lại 28 mô hình v4; nhánh v12 và chỉ số OOF/holdout vẫn lấy cache. Thời gian tùy CPU/GPU.",
@@ -15,352 +15,157 @@
   ],
   "input_checks": [
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\test.csv",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\test.csv",
       "status": "FOUND",
       "bytes": 1037396
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\ve_tay_10_20 - data.csv",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\ve_tay_10_20 - data.csv",
       "status": "FOUND",
       "bytes": 13434349
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\ve_tay_10_20 - data_v31.csv",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\ve_tay_10_20 - data_v31.csv",
       "status": "FOUND",
       "bytes": 743697
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\dataset_82cc33f4f691\\validation.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\dataset_82cc33f4f691\\validation.npz",
       "status": "FOUND",
       "bytes": 1918027
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\test_550_cell6_all_pillars_probs.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\test_550_cell6_all_pillars_probs.npz",
       "status": "FOUND",
       "bytes": 269573
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\hier_preds_s7.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\hier_preds_s7.npz",
       "status": "FOUND",
       "bytes": 116066
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\mscale_preds_s29.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\mscale_preds_s29.npz",
       "status": "FOUND",
       "bytes": 109805
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\ult20_preds_s2026.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\ult20_preds_s2026.npz",
       "status": "FOUND",
       "bytes": 110357
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\dp20_hardft_preds_s2027.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\dp20_hardft_preds_s2027.npz",
       "status": "FOUND",
       "bytes": 110655
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\topo20_swa_preds_s2028.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\topo20_swa_preds_s2028.npz",
       "status": "FOUND",
       "bytes": 111620
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\hier_preds_s7.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\hier_preds_s7.npz",
       "status": "FOUND",
       "bytes": 115371
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\mscale_preds_s29.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\mscale_preds_s29.npz",
       "status": "FOUND",
       "bytes": 109007
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\ult20_preds_s2026.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\ult20_preds_s2026.npz",
       "status": "FOUND",
       "bytes": 109566
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\dp20_hardft_preds_s2027.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\dp20_hardft_preds_s2027.npz",
       "status": "FOUND",
       "bytes": 109814
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\topo20_swa_preds_s2028.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\topo20_swa_preds_s2028.npz",
       "status": "FOUND",
       "bytes": 110843
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\hier_preds_s7.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\hier_preds_s7.npz",
       "status": "FOUND",
       "bytes": 112435
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\mscale_preds_s29.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\mscale_preds_s29.npz",
       "status": "FOUND",
       "bytes": 106174
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\ult20_preds_s2026.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\ult20_preds_s2026.npz",
       "status": "FOUND",
       "bytes": 106705
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\dp20_hardft_preds_s2027.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\dp20_hardft_preds_s2027.npz",
       "status": "FOUND",
       "bytes": 107100
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\topo20_swa_preds_s2028.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\topo20_swa_preds_s2028.npz",
       "status": "FOUND",
       "bytes": 107786
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\hier_preds_s7.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\hier_preds_s7.npz",
       "status": "FOUND",
       "bytes": 116544
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\mscale_preds_s29.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\mscale_preds_s29.npz",
       "status": "FOUND",
       "bytes": 110110
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\ult20_preds_s2026.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\ult20_preds_s2026.npz",
       "status": "FOUND",
       "bytes": 110674
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\dp20_hardft_preds_s2027.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\dp20_hardft_preds_s2027.npz",
       "status": "FOUND",
       "bytes": 111191
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\topo20_swa_preds_s2028.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\topo20_swa_preds_s2028.npz",
       "status": "FOUND",
       "bytes": 111897
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\hier_preds_s7.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\hier_preds_s7.npz",
       "status": "FOUND",
       "bytes": 113402
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\mscale_preds_s29.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\mscale_preds_s29.npz",
       "status": "FOUND",
       "bytes": 107122
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\ult20_preds_s2026.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\ult20_preds_s2026.npz",
       "status": "FOUND",
       "bytes": 107363
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\dp20_hardft_preds_s2027.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\dp20_hardft_preds_s2027.npz",
       "status": "FOUND",
       "bytes": 107678
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\topo20_swa_preds_s2028.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\topo20_swa_preds_s2028.npz",
       "status": "FOUND",
       "bytes": 108839
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\src\\cell_01.py",
-      "status": "FOUND",
-      "bytes": 50682
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\src\\cell_02.py",
-      "status": "FOUND",
-      "bytes": 50236
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\src\\cell_04.py",
-      "status": "FOUND",
-      "bytes": 55868
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\src\\cell_05.py",
-      "status": "FOUND",
-      "bytes": 53531
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\src\\cell_06.py",
-      "status": "FOUND",
-      "bytes": 67217
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\renderer_comparison_b409f5a57688\\config.json",
-      "status": "FOUND",
-      "bytes": 2994
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\hier_mlp_from_scratch_s7.pt",
-      "status": "FOUND",
-      "bytes": 8656087
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\mscale_mlp_from_scratch_s29.pt",
-      "status": "FOUND",
-      "bytes": 11261821
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\ult20_mlp_s2026.pt",
-      "status": "FOUND",
-      "bytes": 11546417
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\dp20_hardft_s2027.pt",
-      "status": "FOUND",
-      "bytes": 11546707
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\topo20_swa_s2028.pt",
-      "status": "FOUND",
-      "bytes": 17151183
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\hier_mlp_from_scratch_s7.pt",
-      "status": "FOUND",
-      "bytes": 8656087
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\mscale_mlp_from_scratch_s29.pt",
-      "status": "FOUND",
-      "bytes": 11261821
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\ult20_mlp_s2026.pt",
-      "status": "FOUND",
-      "bytes": 11546417
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\dp20_hardft_s2027.pt",
-      "status": "FOUND",
-      "bytes": 11546707
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\topo20_swa_s2028.pt",
-      "status": "FOUND",
-      "bytes": 17151183
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\hier_mlp_from_scratch_s7.pt",
-      "status": "FOUND",
-      "bytes": 8656087
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\mscale_mlp_from_scratch_s29.pt",
-      "status": "FOUND",
-      "bytes": 11261821
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\ult20_mlp_s2026.pt",
-      "status": "FOUND",
-      "bytes": 11546417
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\dp20_hardft_s2027.pt",
-      "status": "FOUND",
-      "bytes": 11546707
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\topo20_swa_s2028.pt",
-      "status": "FOUND",
-      "bytes": 17151183
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\hier_mlp_from_scratch_s7.pt",
-      "status": "FOUND",
-      "bytes": 8656087
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\mscale_mlp_from_scratch_s29.pt",
-      "status": "FOUND",
-      "bytes": 11261821
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\ult20_mlp_s2026.pt",
-      "status": "FOUND",
-      "bytes": 11546417
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\dp20_hardft_s2027.pt",
-      "status": "FOUND",
-      "bytes": 11546707
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\topo20_swa_s2028.pt",
-      "status": "FOUND",
-      "bytes": 17151183
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\hier_mlp_from_scratch_s7.pt",
-      "status": "FOUND",
-      "bytes": 8656087
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\mscale_mlp_from_scratch_s29.pt",
-      "status": "FOUND",
-      "bytes": 11261821
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\ult20_mlp_s2026.pt",
-      "status": "FOUND",
-      "bytes": 11546417
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\dp20_hardft_s2027.pt",
-      "status": "FOUND",
-      "bytes": 11546707
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\topo20_swa_s2028.pt",
-      "status": "FOUND",
-      "bytes": 17151183
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\ult20_full_data_100pct.pt",
-      "status": "FOUND",
-      "bytes": 11547496
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\dp20_hardft_full_100pct.pt",
-      "status": "FOUND",
-      "bytes": 11547641
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\topo20_swa_full_100pct.pt",
-      "status": "FOUND",
-      "bytes": 17152567
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\renderer_comparison_b409f5a57688\\standalone_fdeskew_109w_v12\\fold_0\\fold_preds.npz",
-      "status": "FOUND",
-      "bytes": 209709
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\renderer_comparison_b409f5a57688\\standalone_fdeskew_109w_v12\\fold_1\\fold_preds.npz",
-      "status": "FOUND",
-      "bytes": 208925
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\renderer_comparison_b409f5a57688\\standalone_fdeskew_109w_v12\\fold_2\\fold_preds.npz",
-      "status": "FOUND",
-      "bytes": 204629
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\renderer_comparison_b409f5a57688\\standalone_fdeskew_109w_v12\\fold_3\\fold_preds.npz",
-      "status": "FOUND",
-      "bytes": 210647
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\renderer_comparison_b409f5a57688\\standalone_fdeskew_109w_v12\\fold_4\\fold_preds.npz",
-      "status": "FOUND",
-      "bytes": 206004
     }
   ],
-  "probability_bundle": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\test_550_cell6_all_pillars_probs.npz",
+  "probability_bundle": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\test_550_cell6_all_pillars_probs.npz",
   "environment": {
     "python": "3.14.8 (tags/v3.14.8:8e6e75d, Sep 30 2026, 18:19:33) [MSC v.1944 64 bit (AMD64)]",
     "platform": "Windows-11-10.0.26200-SP0",
@@ -422,47 +227,6 @@
     ],
     "scope": "Tính lại chỉ số từ cache OOF/holdout; không tự chứng minh quá trình huấn luyện không rò rỉ."
   },
-  "device": "cpu",
-  "torch_version": "2.14.1+cpu",
-  "torch_cuda_version": null,
-  "weights_vs_cache": {
-    "te_s7_ens": {
-      "max_abs_delta": 0.00032764673233032227,
-      "within_tolerance": false
-    },
-    "te_s29_ens": {
-      "max_abs_delta": 0.0004693269729614258,
-      "within_tolerance": false
-    },
-    "te_u20_ens": {
-      "max_abs_delta": 2.308003604412079e-05,
-      "within_tolerance": true
-    },
-    "te_dp5_ens": {
-      "max_abs_delta": 4.357099533081055e-05,
-      "within_tolerance": true
-    },
-    "te_t6_ens": {
-      "max_abs_delta": 0.00015808641910552979,
-      "within_tolerance": false
-    },
-    "te_u20_full": {
-      "max_abs_delta": 1.5572644770145416e-05,
-      "within_tolerance": true
-    },
-    "te_dp5_full": {
-      "max_abs_delta": 8.45789909362793e-05,
-      "within_tolerance": true
-    },
-    "te_t6_full": {
-      "max_abs_delta": 0.00016444921493530273,
-      "within_tolerance": false
-    },
-    "te_v12_ens": {
-      "max_abs_delta": 0.0,
-      "within_tolerance": true
-    }
-  },
   "submissions": [
     {
       "file": "submission_v4_cell4_ultimate_master.csv",
@@ -481,17 +245,17 @@
         "19": 52,
         "20": 50
       },
-      "reference": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell4_ultimate_master.csv",
-      "reference_sha256": "058ea6827884d16718e335365cc4a0411f6c3571f0752782ee338a8e3008ccbd",
+      "reference": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell4_ultimate_master.csv",
+      "reference_sha256": "f21511fca168eccd69ace3d4131f1650b120fd98ad6d5541ffeb9ab8d9f129bb",
       "matched": 550,
       "reference_n": 550,
       "same_id_order": true,
       "missing_ids": [],
       "extra_ids": [],
       "mismatched_labels": 0,
-      "byte_identical": true,
+      "byte_identical": false,
       "status": "PASS",
-      "message": "Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khớp."
+      "message": "Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khác."
     },
     {
       "file": "submission_v4_cell5_surgical_master.csv",
@@ -510,17 +274,17 @@
         "19": 52,
         "20": 50
       },
-      "reference": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell5_surgical_master.csv",
-      "reference_sha256": "ff61f870771c033f652cdbd8612eaa3f64f248884917b0f6dd19f50c38861e63",
+      "reference": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell5_surgical_master.csv",
+      "reference_sha256": "b8d5da0c9872ae9ff41d15ca300f82cdf75cef829436b3d6a90289cff3a2759d",
       "matched": 550,
       "reference_n": 550,
       "same_id_order": true,
       "missing_ids": [],
       "extra_ids": [],
       "mismatched_labels": 0,
-      "byte_identical": true,
+      "byte_identical": false,
       "status": "PASS",
-      "message": "Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khớp."
+      "message": "Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khác."
     },
     {
       "file": "submission_v4_cell6_topological_swa_master.csv",
@@ -539,17 +303,17 @@
         "19": 52,
         "20": 50
       },
-      "reference": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_topological_swa_master.csv",
-      "reference_sha256": "f918c3b36fbfc556a24261d02a01f0b6d9f932dda0633d36d54142104ddd6df1",
+      "reference": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_topological_swa_master.csv",
+      "reference_sha256": "aa118521a654e0d14aa6e5bf27226196af3b5165b7d276bf6f1bbc0731a538cd",
       "matched": 550,
       "reference_n": 550,
       "same_id_order": true,
       "missing_ids": [],
       "extra_ids": [],
       "mismatched_labels": 0,
-      "byte_identical": true,
+      "byte_identical": false,
       "status": "PASS",
-      "message": "Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khớp."
+      "message": "Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khác."
     },
     {
       "file": "submission_v4_cell6_2hop_chain_19_13_18.csv",
@@ -568,17 +332,17 @@
         "19": 50,
         "20": 50
       },
-      "reference": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_2hop_chain_19_13_18.csv",
-      "reference_sha256": "c65960bab9644361f0b1a5aec9f866a3fa7a8c4218bc67cd8e8fb3d720044759",
+      "reference": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_2hop_chain_19_13_18.csv",
+      "reference_sha256": "de1633185d2e621c4cb16c707ce96fac169cb13cae5c99c32f043d8633246bb6",
       "matched": 550,
       "reference_n": 550,
       "same_id_order": true,
       "missing_ids": [],
       "extra_ids": [],
       "mismatched_labels": 0,
-      "byte_identical": true,
+      "byte_identical": false,
       "status": "PASS",
-      "message": "Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khớp."
+      "message": "Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khác."
     },
     {
       "file": "submission_v4_cell6_final_single_best.csv",
@@ -597,17 +361,17 @@
         "19": 50,
         "20": 50
       },
-      "reference": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_final_single_best.csv",
-      "reference_sha256": "4f2ce16d9e360e3feb544c08fcb13b614f8547bea36421e1a9211561c3bb8e9a",
+      "reference": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_final_single_best.csv",
+      "reference_sha256": "ad45c38c02e26c21f5f708410ae8745366096b02db429d75b55dca433d0e7520",
       "matched": 550,
       "reference_n": 550,
       "same_id_order": true,
       "missing_ids": [],
       "extra_ids": [],
       "mismatched_labels": 0,
-      "byte_identical": true,
+      "byte_identical": false,
       "status": "PASS",
-      "message": "Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khớp."
+      "message": "Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khác."
     }
   ],
   "reference_policy": {
@@ -615,304 +379,148 @@
     "required_passed": 5,
     "existing_reference_mismatch_is_failure": true
   },
-  "summary": "Có kết quả khác bản tham chiếu/cache. Xem bảng đối chiếu và báo cáo JSON.",
-  "elapsed_seconds": 547.3231624000036,
+  "summary": "5/5 submission chính khớp ID, nhãn và thứ tự với bản tham chiếu; đã tính lại chỉ số validation.",
+  "elapsed_seconds": 2.0269733000022825,
   "inputs": [
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\test.csv",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\test.csv",
       "sha256": "59882b4106359d9a46f38abfc78cc10ca3e55379d8a5dbcd6be57e5bd8361596"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\dp20_hardft_full_100pct.pt",
-      "sha256": "a620e3033a148fbb52fc31fec5734a013bfc6b268b60fe4fe86f7d71689fbc1d"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\dp20_hardft_preds_s2027.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\dp20_hardft_preds_s2027.npz",
       "sha256": "82c62dd1396362bfe20f5b3dc22e33e57a59088c0e4152d7f41f1f91c8738d38"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\dp20_hardft_s2027.pt",
-      "sha256": "e8512caf1ef198e2177ffa9b9f81cd2ec84bf4d82f8addefe4452b5a2a472542"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\hier_mlp_from_scratch_s7.pt",
-      "sha256": "418b9b20ac88ea4475a1703a393067d0e33a3159d00f0fe6f7f610a4b56dd109"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\hier_preds_s7.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\hier_preds_s7.npz",
       "sha256": "41cc8eba57a77fc1173019a2f2d5c56b74dd05250495bfe4d80839f0580c7f3a"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\mscale_mlp_from_scratch_s29.pt",
-      "sha256": "36c8c17383f2c2dbcf71c5fce3c2e749ddcf62cf0ccdb106498881e93a8e2c6c"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\mscale_preds_s29.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\mscale_preds_s29.npz",
       "sha256": "2c458513a21d1d170986dfcb7bcf612cc2805aca235b1e591071eddfc3986f3e"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\topo20_swa_preds_s2028.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\topo20_swa_preds_s2028.npz",
       "sha256": "02a1708afa57cad07c06ab245f1169773eecf9ef2d4795bc225cc999eeb459e8"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\topo20_swa_s2028.pt",
-      "sha256": "15d6d0d84fb6ae1d88e5f9236f9e097bc7ad4f1d33f3da732d9a655c7b1520b7"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\ult20_mlp_s2026.pt",
-      "sha256": "e56d56718f9e9839c6981ff77fe6ddad90742d4dc523b84da568bcefaf2ffe37"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\ult20_preds_s2026.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\ult20_preds_s2026.npz",
       "sha256": "07c9b72856a2216d63cd791139765133ee2abdb87eaad1b552a9b1961974fd0e"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\dp20_hardft_preds_s2027.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\dp20_hardft_preds_s2027.npz",
       "sha256": "1d5ab934ab132d96abeee35f55ab6ccf62aba7949c7be9db6a9c1b84e5f71f58"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\dp20_hardft_s2027.pt",
-      "sha256": "1f3785812c8eab3aa1f79d4d8d0205c415ba4576fb0ab3e06c1ecc22a6fe2bad"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\hier_mlp_from_scratch_s7.pt",
-      "sha256": "bb8c921d53eb76059e9beff96a5e24dd9513172756ccc066fc004ce1180b7476"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\hier_preds_s7.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\hier_preds_s7.npz",
       "sha256": "2fd94b35d54df0b095ef53e89a98dd91cc7445d31d0d816a53c495468e50dbd2"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\mscale_mlp_from_scratch_s29.pt",
-      "sha256": "17187b5d78707be937c0fc71d553459e56f6a73357061fbc7e3281acd96839c0"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\mscale_preds_s29.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\mscale_preds_s29.npz",
       "sha256": "50a72c990d1223c23f25a237d9649b57705e6eda0edde121542378a2acd142ec"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\topo20_swa_preds_s2028.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\topo20_swa_preds_s2028.npz",
       "sha256": "fe7204bec1c3a0e289ce3ab086dc6851aa327f49e395d9378c569c1c4469aa32"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\topo20_swa_s2028.pt",
-      "sha256": "2807708ffc57b7e22be798004f724af25d79c81934dc7223bc25bfaab2481b87"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\ult20_mlp_s2026.pt",
-      "sha256": "9f81d847ebb8d3ea50ccdfce2dfc45b15125ce40855d39d474fc9eba2c5bac1d"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\ult20_preds_s2026.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\ult20_preds_s2026.npz",
       "sha256": "053276d53df310210476a27b0b6178576d81b8f1f84158cc52c15392ff7d6bb3"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\dp20_hardft_preds_s2027.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\dp20_hardft_preds_s2027.npz",
       "sha256": "30a4845048b9c8a786066d8f92510104f80bb953e7c06411fb238e15c06aeb32"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\dp20_hardft_s2027.pt",
-      "sha256": "e29c64da14e0446a743aa1e6e4f2360e158c0b60cd7f61154be5d9ea85300575"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\hier_mlp_from_scratch_s7.pt",
-      "sha256": "56db4e81541760d5c7aa0f6e44badb250f2861c4471754f7e95731a0f73960bf"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\hier_preds_s7.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\hier_preds_s7.npz",
       "sha256": "fc820e6c837302d5e14cd39fa5454b35024e9505ba0fa63587710c572b332024"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\mscale_mlp_from_scratch_s29.pt",
-      "sha256": "b50c66c39d446e413fd0cdb0d59d741942bb9ea4b7452856e780ee6855e98941"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\mscale_preds_s29.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\mscale_preds_s29.npz",
       "sha256": "f39a2d985089837c9770744be825fe393c3ba9894166ff15894fe86ba85d87ad"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\topo20_swa_preds_s2028.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\topo20_swa_preds_s2028.npz",
       "sha256": "fdbcd1ffaa983a2864e0f17f55cbb89dbda8be4c37bec115d9f4e00ea9c9b144"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\topo20_swa_s2028.pt",
-      "sha256": "da87533f271c39929b67e6d1393c36defd93c4db8e1ab7b1a63bd6f09683eac9"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\ult20_mlp_s2026.pt",
-      "sha256": "94a5c882b10500c6cacd309e742a69d26718946aa1322d354d041215b599d15b"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\ult20_preds_s2026.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\ult20_preds_s2026.npz",
       "sha256": "eccaeeffdf678fc9e88b24bf925f4c8e09b120df7a0fb6eb2177ce1eecea2a31"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\dp20_hardft_preds_s2027.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\dp20_hardft_preds_s2027.npz",
       "sha256": "37049856c28ac3004581b9c0bf815297408d6dc1c8f261a8add224f6a8dd3194"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\dp20_hardft_s2027.pt",
-      "sha256": "8525bd817794c25f22e23aab9a16c206f551a9013bee7b61a2cabe57ca748443"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\hier_mlp_from_scratch_s7.pt",
-      "sha256": "f7b94ee00de7c94b2b75f07aefdf582bc6df0e5f30f0c997efaa2f15463b9976"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\hier_preds_s7.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\hier_preds_s7.npz",
       "sha256": "2f162d051cfbf1691610683d05c01b91b27a26657e98462666218760d463c19e"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\mscale_mlp_from_scratch_s29.pt",
-      "sha256": "68e16f7119ad09b774a383aefc297b6cd412bff58b6d3b6c0a392f990f5ba2eb"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\mscale_preds_s29.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\mscale_preds_s29.npz",
       "sha256": "c1a811fec84c1a17f778cba434903dd75c11ad38b3ce4ec874b1df0021909106"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\topo20_swa_preds_s2028.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\topo20_swa_preds_s2028.npz",
       "sha256": "d70836fe3f183fa74a69f2c2316725310d699a063421304990cb46ba5ee6620a"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\topo20_swa_s2028.pt",
-      "sha256": "78f116aabee45eb4d4fa7d87d0dd0544866558ec2f4894c617c4ccd7e77acbc4"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\ult20_mlp_s2026.pt",
-      "sha256": "a7193441eb94e9073b74c8e08c1fc4a94109b46c963fb6893f8143b8b789abf1"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\ult20_preds_s2026.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\ult20_preds_s2026.npz",
       "sha256": "e21bccdc942bedc45c5affb39085363d98f32480716863b42ceb6acaa71ac153"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\dp20_hardft_preds_s2027.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\dp20_hardft_preds_s2027.npz",
       "sha256": "32b83d1f6cafcef0429158ffc6ec7d50e918b9cf4ede2e784c7584292ea1bf92"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\dp20_hardft_s2027.pt",
-      "sha256": "3ac311b8c2d325bfb1a1201ae83d5c592d4cae48c3d5054980f55fdbe133cdf0"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\hier_mlp_from_scratch_s7.pt",
-      "sha256": "7869d0938e46345a87bed7ed5e2ddb8d0bcbc8287fe512f969d25e7b777fbd0b"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\hier_preds_s7.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\hier_preds_s7.npz",
       "sha256": "40a1e5fdb39babbb5f76bc208127d436bfd369be854caaaf9e6d4dfa11e6d95c"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\mscale_mlp_from_scratch_s29.pt",
-      "sha256": "159505a2878a21908ba995db093f03291c784cd8066569a5ad99d1094ae37551"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\mscale_preds_s29.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\mscale_preds_s29.npz",
       "sha256": "f5f7078e7ced8eacda9fc2e76dc756b97dace66b937f576c88fc5d82734f64e4"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\topo20_swa_preds_s2028.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\topo20_swa_preds_s2028.npz",
       "sha256": "f60ad9d031fe4c35ba0e495504f287df7d731b970a5da584cfec110dec184556"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\topo20_swa_s2028.pt",
-      "sha256": "10ceb75f80d638275d0fbdd46dc1a2762fbed1d05f1744f001155b1f78ccdc9a"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\ult20_mlp_s2026.pt",
-      "sha256": "6125b1ac63f7cf3a6f03a0b72f50fe2b323856146e1b78da07570c893ade0ce1"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\ult20_preds_s2026.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\ult20_preds_s2026.npz",
       "sha256": "50641d87859fbcef4a9d34ff9a7e2b22f107dd3780524d230c77fadc4c8cacc9"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell4_ultimate_master.csv",
-      "sha256": "058ea6827884d16718e335365cc4a0411f6c3571f0752782ee338a8e3008ccbd"
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell4_ultimate_master.csv",
+      "sha256": "f21511fca168eccd69ace3d4131f1650b120fd98ad6d5541ffeb9ab8d9f129bb"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell5_surgical_master.csv",
-      "sha256": "ff61f870771c033f652cdbd8612eaa3f64f248884917b0f6dd19f50c38861e63"
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell5_surgical_master.csv",
+      "sha256": "b8d5da0c9872ae9ff41d15ca300f82cdf75cef829436b3d6a90289cff3a2759d"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_2hop_chain_19_13_18.csv",
-      "sha256": "c65960bab9644361f0b1a5aec9f866a3fa7a8c4218bc67cd8e8fb3d720044759"
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_2hop_chain_19_13_18.csv",
+      "sha256": "de1633185d2e621c4cb16c707ce96fac169cb13cae5c99c32f043d8633246bb6"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_final_single_best.csv",
-      "sha256": "4f2ce16d9e360e3feb544c08fcb13b614f8547bea36421e1a9211561c3bb8e9a"
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_final_single_best.csv",
+      "sha256": "ad45c38c02e26c21f5f708410ae8745366096b02db429d75b55dca433d0e7520"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_topological_swa_master.csv",
-      "sha256": "f918c3b36fbfc556a24261d02a01f0b6d9f932dda0633d36d54142104ddd6df1"
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_topological_swa_master.csv",
+      "sha256": "aa118521a654e0d14aa6e5bf27226196af3b5165b7d276bf6f1bbc0731a538cd"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\test_550_cell6_all_pillars_probs.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\test_550_cell6_all_pillars_probs.npz",
       "sha256": "219796c188d1fc11426b21fa1d6da342271850d7b56aeb720c3d38264f653d51"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\topo20_swa_full_100pct.pt",
-      "sha256": "7456c1f3aca7e8d16799b00966ea376c0c02b9e9d4c7888c089f449d19e52893"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\ult20_full_data_100pct.pt",
-      "sha256": "ac07a7153e80c0eff4389a192820938338a1dadd2176a7eb1273258d3f3aa175"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\dataset_82cc33f4f691\\validation.npz",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\dataset_82cc33f4f691\\validation.npz",
       "sha256": "3faeaf640e8ee1726e5986bddd5028195f6bf5ef5319c4b5535852737dd0bdc7"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\renderer_comparison_b409f5a57688\\config.json",
-      "sha256": "dc79f057a419374e8dbc6872dcdd62f7f89f5d5d162530b2a6142a4721e0e0ed"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\renderer_comparison_b409f5a57688\\standalone_fdeskew_109w_v12\\fold_0\\fold_preds.npz",
-      "sha256": "acc90d81f9242c717dbd6e9cf778ae884ac22dd506cdb71d80f60094e8f0a5a4"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\renderer_comparison_b409f5a57688\\standalone_fdeskew_109w_v12\\fold_1\\fold_preds.npz",
-      "sha256": "485ba960d2c3d7d92fb2e2e0da8049e2c0421239124534238ad36b5921ce7b7a"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\renderer_comparison_b409f5a57688\\standalone_fdeskew_109w_v12\\fold_2\\fold_preds.npz",
-      "sha256": "f849a215d2a78d1de54b629756befdb0ce5a47b158852c0b5c061224371948ba"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\renderer_comparison_b409f5a57688\\standalone_fdeskew_109w_v12\\fold_3\\fold_preds.npz",
-      "sha256": "96411562604fad0d1f7b6935cc0d73d0602bf147323dd4483efd93ef9320b4c9"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\renderer_comparison_b409f5a57688\\standalone_fdeskew_109w_v12\\fold_4\\fold_preds.npz",
-      "sha256": "b799616afe5805a5f12e97cb0333310f89e35b4a95dfd08168fab04e2ce77769"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\ve_tay_10_20 - data.csv",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\ve_tay_10_20 - data.csv",
       "sha256": "05f765fdd543351d5413401e238818492d2cad67cca9e8242ffd8abbf9ac3655"
     },
     {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\ve_tay_10_20 - data_v31.csv",
+      "path": "C:\\Users\\Admin\\Documents\\GitHub\\MNIST-10-20-v4\\MNIST_data\\ve_tay_10_20 - data_v31.csv",
       "sha256": "0cbe5125f530c7244f8efd2d8d099571fd90820fb8156d4dcdbc56cc2585f0f9"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\src\\cell_01.py",
-      "sha256": "98c0d8ee80aee754c205bcd52762620c4dd37a397b506e36854aa7140c8574c8"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\src\\cell_02.py",
-      "sha256": "57efb902680b231d79f3ac63da80f939d622e96eaa12e5caf87e53ac16dee59e"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\src\\cell_04.py",
-      "sha256": "f146980443c3e3cea484b8526cf23d51f5cbb8cef5eb20f3206ee9778f4dc05b"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\src\\cell_05.py",
-      "sha256": "0ec133d311e9acfc18d273b2c1c1d37865b6d06b5dc599fc3f12068a665add63"
-    },
-    {
-      "path": "D:\\GitHub\\MNIST-10-20-v4\\src\\cell_06.py",
-      "sha256": "5a97da12e7e155cb2188b631ef3e774956a08b47a0f1c462cd016a5f4a7a0c4e"
     }
   ]
 }

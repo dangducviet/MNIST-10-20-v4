@@ -1,0 +1,407 @@
+{
+  "status": "INCOMPLETE",
+  "mode": "fast",
+  "started_at": "2026-10-18T10:45:00.015057+00:00",
+  "data_root": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data",
+  "run_directory": "D:\\GitHub\\MNIST-10-20-v4\\verified_submissions\\run_20261018T104500Z_d30612",
+  "notes": [
+    "fast tính lại chỉ số OOF/holdout và tái lập CSV từ cache; không chạy lại mô hình hoặc huấn luyện.",
+    "weights chạy lại 28 mô hình v4; nhánh v12 và chỉ số OOF/holdout vẫn lấy cache. Thời gian tùy CPU/GPU.",
+    "Hậu xử lý bám Cell 4–9 gốc, gồm sửa dòng 147 và các sửa theo ID. Đây là tái lập kết quả lịch sử trên 550 mẫu gốc, không phải bộ dự đoán cho test mới.",
+    "Khớp submission tham chiếu không đồng nghĩa đúng nhãn test. Không tính độ chính xác test/Kaggle khi không có nhãn thật.",
+    "Chỉ số OOF được tính từ cache; kiểm tra này không tự xác nhận toàn bộ quy trình train không rò rỉ dữ liệu."
+  ],
+  "probability_bundle": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\test_550_cell6_all_pillars_probs.npz",
+  "environment": {
+    "python": "3.14.8 (tags/v3.14.8:8e6e75d, Sep 30 2026, 18:19:33) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6"
+  },
+  "oof": {
+    "metrics": [
+      {
+        "split": "OOF cũ",
+        "domain": "Raw",
+        "correct": 4836,
+        "n": 4932,
+        "accuracy_percent": 98.05352798053528
+      },
+      {
+        "split": "Holdout bổ sung",
+        "domain": "Raw",
+        "correct": 446,
+        "n": 451,
+        "accuracy_percent": 98.89135254988913
+      },
+      {
+        "split": "Tổng hợp",
+        "domain": "Raw",
+        "correct": 5282,
+        "n": 5383,
+        "accuracy_percent": 98.12372283113505
+      },
+      {
+        "split": "OOF cũ",
+        "domain": "Capped_Style",
+        "correct": 4822,
+        "n": 4932,
+        "accuracy_percent": 97.76966747769667
+      },
+      {
+        "split": "Holdout bổ sung",
+        "domain": "Capped_Style",
+        "correct": 444,
+        "n": 451,
+        "accuracy_percent": 98.4478935698448
+      },
+      {
+        "split": "Tổng hợp",
+        "domain": "Capped_Style",
+        "correct": 5266,
+        "n": 5383,
+        "accuracy_percent": 97.82649080438418
+      }
+    ],
+    "old_writers": 94,
+    "holdout_writers": 15,
+    "strictly_new_writers": 12,
+    "overlapping_writers": [
+      "hưng",
+      "tâm",
+      "đạt"
+    ],
+    "scope": "Tính lại chỉ số từ cache OOF/holdout; không tự chứng minh quá trình huấn luyện không rò rỉ."
+  },
+  "submissions": [
+    {
+      "file": "submission_v4_cell4_ultimate_master.csv",
+      "sha256": "058ea6827884d16718e335365cc4a0411f6c3571f0752782ee338a8e3008ccbd",
+      "n": 550,
+      "class_counts": {
+        "10": 50,
+        "11": 48,
+        "12": 51,
+        "13": 49,
+        "14": 49,
+        "15": 51,
+        "16": 50,
+        "17": 52,
+        "18": 48,
+        "19": 52,
+        "20": 50
+      },
+      "reference": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell4_ultimate_master.csv",
+      "reference_sha256": "058ea6827884d16718e335365cc4a0411f6c3571f0752782ee338a8e3008ccbd",
+      "matched": 550,
+      "reference_n": 550,
+      "same_id_order": true,
+      "missing_ids": [],
+      "extra_ids": [],
+      "mismatched_labels": 0,
+      "byte_identical": true,
+      "status": "PASS",
+      "message": "Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khớp."
+    },
+    {
+      "file": "submission_v4_cell5_surgical_master.csv",
+      "sha256": "ff61f870771c033f652cdbd8612eaa3f64f248884917b0f6dd19f50c38861e63",
+      "n": 550,
+      "class_counts": {
+        "10": 50,
+        "11": 49,
+        "12": 50,
+        "13": 49,
+        "14": 49,
+        "15": 51,
+        "16": 50,
+        "17": 52,
+        "18": 48,
+        "19": 52,
+        "20": 50
+      },
+      "reference": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell5_surgical_master.csv",
+      "reference_sha256": "ff61f870771c033f652cdbd8612eaa3f64f248884917b0f6dd19f50c38861e63",
+      "matched": 550,
+      "reference_n": 550,
+      "same_id_order": true,
+      "missing_ids": [],
+      "extra_ids": [],
+      "mismatched_labels": 0,
+      "byte_identical": true,
+      "status": "PASS",
+      "message": "Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khớp."
+    },
+    {
+      "file": "submission_v4_cell6_topological_swa_master.csv",
+      "sha256": "f918c3b36fbfc556a24261d02a01f0b6d9f932dda0633d36d54142104ddd6df1",
+      "n": 550,
+      "class_counts": {
+        "10": 50,
+        "11": 50,
+        "12": 50,
+        "13": 49,
+        "14": 49,
+        "15": 51,
+        "16": 50,
+        "17": 51,
+        "18": 48,
+        "19": 52,
+        "20": 50
+      },
+      "reference": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_topological_swa_master.csv",
+      "reference_sha256": "f918c3b36fbfc556a24261d02a01f0b6d9f932dda0633d36d54142104ddd6df1",
+      "matched": 550,
+      "reference_n": 550,
+      "same_id_order": true,
+      "missing_ids": [],
+      "extra_ids": [],
+      "mismatched_labels": 0,
+      "byte_identical": true,
+      "status": "PASS",
+      "message": "Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khớp."
+    },
+    {
+      "file": "submission_v4_cell6_2hop_chain_19_13_18.csv",
+      "sha256": "c65960bab9644361f0b1a5aec9f866a3fa7a8c4218bc67cd8e8fb3d720044759",
+      "n": 550,
+      "class_counts": {
+        "10": 50,
+        "11": 50,
+        "12": 50,
+        "13": 50,
+        "14": 49,
+        "15": 51,
+        "16": 50,
+        "17": 51,
+        "18": 49,
+        "19": 50,
+        "20": 50
+      },
+      "reference": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_2hop_chain_19_13_18.csv",
+      "reference_sha256": "c65960bab9644361f0b1a5aec9f866a3fa7a8c4218bc67cd8e8fb3d720044759",
+      "matched": 550,
+      "reference_n": 550,
+      "same_id_order": true,
+      "missing_ids": [],
+      "extra_ids": [],
+      "mismatched_labels": 0,
+      "byte_identical": true,
+      "status": "PASS",
+      "message": "Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khớp."
+    },
+    {
+      "file": "submission_v4_cell6_2hop_plus_481_to_18.csv",
+      "sha256": "4882988e38519716d2c21a5c64bd9a8b42f07c6acbcdf3ccdc574d49abe859f3",
+      "n": 550,
+      "class_counts": {
+        "10": 49,
+        "11": 50,
+        "12": 50,
+        "13": 50,
+        "14": 49,
+        "15": 51,
+        "16": 50,
+        "17": 51,
+        "18": 50,
+        "19": 50,
+        "20": 50
+      },
+      "status": "MISSING_REFERENCE",
+      "message": "Đã tạo CSV; chưa có bản tham chiếu để đối chiếu."
+    },
+    {
+      "file": "submission_v4_cell6_2hop_plus_481_and_234.csv",
+      "sha256": "9d190bd38a461dee557e0eb091923993bf194c211d7360b24562bd34cf0f068c",
+      "n": 550,
+      "class_counts": {
+        "10": 49,
+        "11": 49,
+        "12": 50,
+        "13": 50,
+        "14": 49,
+        "15": 51,
+        "16": 51,
+        "17": 51,
+        "18": 50,
+        "19": 50,
+        "20": 50
+      },
+      "status": "MISSING_REFERENCE",
+      "message": "Đã tạo CSV; chưa có bản tham chiếu để đối chiếu."
+    },
+    {
+      "file": "submission_v4_cell6_final_single_best.csv",
+      "sha256": "4f2ce16d9e360e3feb544c08fcb13b614f8547bea36421e1a9211561c3bb8e9a",
+      "n": 550,
+      "class_counts": {
+        "10": 50,
+        "11": 49,
+        "12": 50,
+        "13": 50,
+        "14": 49,
+        "15": 51,
+        "16": 51,
+        "17": 51,
+        "18": 49,
+        "19": 50,
+        "20": 50
+      },
+      "reference": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_final_single_best.csv",
+      "reference_sha256": "4f2ce16d9e360e3feb544c08fcb13b614f8547bea36421e1a9211561c3bb8e9a",
+      "matched": 550,
+      "reference_n": 550,
+      "same_id_order": true,
+      "missing_ids": [],
+      "extra_ids": [],
+      "mismatched_labels": 0,
+      "byte_identical": true,
+      "status": "PASS",
+      "message": "Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khớp."
+    }
+  ],
+  "summary": "Đã tạo CSV và tính chỉ số; còn thiếu bản tham chiếu để xác nhận toàn bộ.",
+  "elapsed_seconds": 1.3430692999972962,
+  "inputs": [
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\test.csv",
+      "sha256": "59882b4106359d9a46f38abfc78cc10ca3e55379d8a5dbcd6be57e5bd8361596"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\dp20_hardft_preds_s2027.npz",
+      "sha256": "82c62dd1396362bfe20f5b3dc22e33e57a59088c0e4152d7f41f1f91c8738d38"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\hier_preds_s7.npz",
+      "sha256": "41cc8eba57a77fc1173019a2f2d5c56b74dd05250495bfe4d80839f0580c7f3a"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\mscale_preds_s29.npz",
+      "sha256": "2c458513a21d1d170986dfcb7bcf612cc2805aca235b1e591071eddfc3986f3e"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\topo20_swa_preds_s2028.npz",
+      "sha256": "02a1708afa57cad07c06ab245f1169773eecf9ef2d4795bc225cc999eeb459e8"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_0\\ult20_preds_s2026.npz",
+      "sha256": "07c9b72856a2216d63cd791139765133ee2abdb87eaad1b552a9b1961974fd0e"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\dp20_hardft_preds_s2027.npz",
+      "sha256": "1d5ab934ab132d96abeee35f55ab6ccf62aba7949c7be9db6a9c1b84e5f71f58"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\hier_preds_s7.npz",
+      "sha256": "2fd94b35d54df0b095ef53e89a98dd91cc7445d31d0d816a53c495468e50dbd2"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\mscale_preds_s29.npz",
+      "sha256": "50a72c990d1223c23f25a237d9649b57705e6eda0edde121542378a2acd142ec"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\topo20_swa_preds_s2028.npz",
+      "sha256": "fe7204bec1c3a0e289ce3ab086dc6851aa327f49e395d9378c569c1c4469aa32"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_1\\ult20_preds_s2026.npz",
+      "sha256": "053276d53df310210476a27b0b6178576d81b8f1f84158cc52c15392ff7d6bb3"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\dp20_hardft_preds_s2027.npz",
+      "sha256": "30a4845048b9c8a786066d8f92510104f80bb953e7c06411fb238e15c06aeb32"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\hier_preds_s7.npz",
+      "sha256": "fc820e6c837302d5e14cd39fa5454b35024e9505ba0fa63587710c572b332024"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\mscale_preds_s29.npz",
+      "sha256": "f39a2d985089837c9770744be825fe393c3ba9894166ff15894fe86ba85d87ad"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\topo20_swa_preds_s2028.npz",
+      "sha256": "fdbcd1ffaa983a2864e0f17f55cbb89dbda8be4c37bec115d9f4e00ea9c9b144"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_2\\ult20_preds_s2026.npz",
+      "sha256": "eccaeeffdf678fc9e88b24bf925f4c8e09b120df7a0fb6eb2177ce1eecea2a31"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\dp20_hardft_preds_s2027.npz",
+      "sha256": "37049856c28ac3004581b9c0bf815297408d6dc1c8f261a8add224f6a8dd3194"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\hier_preds_s7.npz",
+      "sha256": "2f162d051cfbf1691610683d05c01b91b27a26657e98462666218760d463c19e"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\mscale_preds_s29.npz",
+      "sha256": "c1a811fec84c1a17f778cba434903dd75c11ad38b3ce4ec874b1df0021909106"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\topo20_swa_preds_s2028.npz",
+      "sha256": "d70836fe3f183fa74a69f2c2316725310d699a063421304990cb46ba5ee6620a"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_3\\ult20_preds_s2026.npz",
+      "sha256": "e21bccdc942bedc45c5affb39085363d98f32480716863b42ceb6acaa71ac153"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\dp20_hardft_preds_s2027.npz",
+      "sha256": "32b83d1f6cafcef0429158ffc6ec7d50e918b9cf4ede2e784c7584292ea1bf92"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\hier_preds_s7.npz",
+      "sha256": "40a1e5fdb39babbb5f76bc208127d436bfd369be854caaaf9e6d4dfa11e6d95c"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\mscale_preds_s29.npz",
+      "sha256": "f5f7078e7ced8eacda9fc2e76dc756b97dace66b937f576c88fc5d82734f64e4"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\topo20_swa_preds_s2028.npz",
+      "sha256": "f60ad9d031fe4c35ba0e495504f287df7d731b970a5da584cfec110dec184556"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\fold_4\\ult20_preds_s2026.npz",
+      "sha256": "50641d87859fbcef4a9d34ff9a7e2b22f107dd3780524d230c77fadc4c8cacc9"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell4_ultimate_master.csv",
+      "sha256": "058ea6827884d16718e335365cc4a0411f6c3571f0752782ee338a8e3008ccbd"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell5_surgical_master.csv",
+      "sha256": "ff61f870771c033f652cdbd8612eaa3f64f248884917b0f6dd19f50c38861e63"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_2hop_chain_19_13_18.csv",
+      "sha256": "c65960bab9644361f0b1a5aec9f866a3fa7a8c4218bc67cd8e8fb3d720044759"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_final_single_best.csv",
+      "sha256": "4f2ce16d9e360e3feb544c08fcb13b614f8547bea36421e1a9211561c3bb8e9a"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\submission_v4_cell6_topological_swa_master.csv",
+      "sha256": "f918c3b36fbfc556a24261d02a01f0b6d9f932dda0633d36d54142104ddd6df1"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v4_hier_multi_mlp\\test_550_cell6_all_pillars_probs.npz",
+      "sha256": "219796c188d1fc11426b21fa1d6da342271850d7b56aeb720c3d38264f653d51"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\v5_76ddef9bc184\\dataset_82cc33f4f691\\validation.npz",
+      "sha256": "3faeaf640e8ee1726e5986bddd5028195f6bf5ef5319c4b5535852737dd0bdc7"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\ve_tay_10_20 - data.csv",
+      "sha256": "05f765fdd543351d5413401e238818492d2cad67cca9e8242ffd8abbf9ac3655"
+    },
+    {
+      "path": "D:\\GitHub\\MNIST-10-20-v4\\MNIST_data\\ve_tay_10_20 - data_v31.csv",
+      "sha256": "0cbe5125f530c7244f8efd2d8d099571fd90820fb8156d4dcdbc56cc2585f0f9"
+    }
+  ]
+}

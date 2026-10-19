@@ -1,0 +1,21 @@
+MNIST 10–20 | KIỂM TRA KẾT QUẢ CHO BTC
+Chế độ: fast | Dữ liệu: D:\GitHub\MNIST-10-20-v4\MNIST_data
+
+[1/3] Tính lại chỉ số OOF / holdout từ cache...
+  OOF cũ             Raw           : 4836/4932 (98.05%)
+  Holdout bổ sung    Raw           : 446/451 (98.89%)
+  Tổng hợp           Raw           : 5282/5383 (98.12%)
+  OOF cũ             Capped_Style  : 4822/4932 (97.77%)
+  Holdout bổ sung    Capped_Style  : 444/451 (98.45%)
+  Tổng hợp           Capped_Style  : 5266/5383 (97.83%)
+
+[2/3] Tái lập đúng các bước Cell 4–9 gốc (gồm sửa theo dòng/ID)...
+
+[3/3] Đối chiếu ID, nhãn, thứ tự và SHA256...
+  PASS              submission_v4_cell4_ultimate_master.csv: Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khớp.
+  PASS              submission_v4_cell5_surgical_master.csv: Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khớp.
+  PASS              submission_v4_cell6_topological_swa_master.csv: Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khớp.
+  PASS              submission_v4_cell6_2hop_chain_19_13_18.csv: Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khớp.
+  MISSING_REFERENCE submission_v4_cell6_2hop_plus_481_to_18.csv: Đã tạo CSV; chưa có bản tham chiếu để đối chiếu.
+  MISSING_REFERENCE submission_v4_cell6_2hop_plus_481_and_234.csv: Đã tạo CSV; chưa có bản tham chiếu để đối chiếu.
+  PASS              submission_v4_cell6_final_single_best.csv: Khớp ID + nhãn: 550/550; thứ tự ID: khớp; byte: khớp.

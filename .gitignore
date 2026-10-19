@@ -1,3 +1,7 @@
 __pycache__/
 .ipynb_checkpoints/
 *.pending
+
+Add-Content -Path ".gitignore" -Value "`n.venv-verification/"
+
+verified_submissions/

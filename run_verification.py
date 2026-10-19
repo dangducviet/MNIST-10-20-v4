@@ -4,6 +4,7 @@
 
 Double-click KIEM_TRA_BTC.cmd on Windows, or run python run_verification.py.
 fast replays caches; weights recomputes 28 v4 models but retains cached v12.
+predict runs the fixed v4 ensemble on new pixels without historical postprocessing.
 No test accuracy is inferred from agreement with a reference submission.
 """
 from __future__ import annotations
@@ -44,6 +45,14 @@ WEIGHT_NAMES = (
     'ult20_mlp_s2026.pt', 'dp20_hardft_s2027.pt', 'topo20_swa_s2028.pt',
 )
 FULL_WEIGHT_NAMES = ('ult20_full_data_100pct.pt', 'dp20_hardft_full_100pct.pt', 'topo20_swa_full_100pct.pt')
+# Expanded te_hier28 formula already present in Cell 6, before its v12 gate.
+MODEL_ONLY_WEIGHTS = {
+    'te_t6_ens': 0.224, 'te_t6_full': 0.112,
+    'te_dp5_ens': 0.184, 'te_dp5_full': 0.088,
+    'te_u20_ens': 0.128, 'te_u20_full': 0.064,
+    'te_s29_ens': 0.10, 'te_s7_ens': 0.10,
+}
+TRAIN_CELLS = (1, 2, 3, 4, 5, 6, 7, 9)
 PILLAR_KEYS = {
     'te_s7_ens': 'te_s7_ens', 'te_s29_ens': 'te_s29_ens',
     'te_u20_ens': 'te_u20_ens', 'te_dp5_ens': 'te_dp5_ens', 'te_t6_ens': 'te_t6_ens',
@@ -108,7 +117,7 @@ def sha256_file(path):
 def ensure_dependencies(mode, no_install=False):
     """Install only when imports fail; never install into the user's global Python."""
     packages = {'numpy': 'numpy>=1.26,<3', 'pandas': 'pandas>=2.1,<4'}
-    if mode in ('weights', 'train'):
+    if mode in ('weights', 'train', 'predict'):
         packages.update({'scipy': 'scipy>=1.11,<2', 'torch': 'torch>=2.2,<3', 'PIL': 'Pillow>=10', 'tqdm': 'tqdm>=4.66'})
     missing = []
     for module, requirement in packages.items():
@@ -221,9 +230,33 @@ def source_dir():
     return REPO_ROOT / 'src'
 
 
-def preflight(data_root, mode, bundle):
+def required_input_paths(data_root, mode, bundle=None, test_csv=None):
+    """Inputs read by the supplied cells; v4 outputs are produced by earlier cells."""
     v4 = data_root / 'v4_hier_multi_mlp'
     v5 = data_root / V5_NAME
+    comparison = v5 / CMP_NAME
+    if mode == 'predict':
+        paths = [test_csv if test_csv is not None else data_root / 'test.csv', Path(__file__).resolve()]
+        paths += [source_dir() / f'cell_{index:02d}.py' for index in (1, 2, 4, 5, 6)]
+        paths += [comparison / 'config.json']
+        paths.extend(v4 / f'fold_{fold}' / name for fold in range(5) for name in WEIGHT_NAMES)
+        paths += [v4 / name for name in FULL_WEIGHT_NAMES]
+        return paths
+    if mode == 'train':
+        paths = [source_dir() / f'cell_{index:02d}.py' for index in TRAIN_CELLS]
+        paths += [data_root / filename for filename in ('test.csv', 've_tay_10_20 - data.csv', 've_tay_10_20 - data_v31.csv')]
+        paths += [v5 / DATASET_NAME / 'train.npz', v5 / DATASET_NAME / 'validation.npz', v5 / 'meta.npz']
+        paths += [comparison / filename for filename in ('strokes_capped.npz', 'validation_capped.npz', 'config.json')]
+        paths += [
+            comparison / 'standalone_fdeskew_109w_v12' / 'new_451_strokes_and_recomb.npz',
+            comparison / 'baseline_cv_e55217c88b0c' / 'config.json',
+            comparison / 'ft_cv_12861935de9d' / 'capped' / 'oof_all_folds.npz',
+            comparison / 'seed29_ensemble_cv_dd71a4292e16' / 'oof_all_folds.npz',
+            comparison / 'final_full_capped_4b1e77287434' / 'model_final.pt',
+        ]
+        paths.extend(comparison / 'ft_cv_12861935de9d' / 'capped' / f'fold_{fold}' / 'model_final.pt' for fold in range(5))
+        paths.extend(comparison / 'standalone_fdeskew_109w_v12' / f'fold_{fold}' / 'fold_preds.npz' for fold in range(5))
+        return paths
     paths = [data_root / 'test.csv', data_root / 've_tay_10_20 - data.csv',
              data_root / 've_tay_10_20 - data_v31.csv', v5 / DATASET_NAME / 'validation.npz', bundle]
     paths.extend(v4 / f'fold_{fold}' / name for fold in range(5) for name in FOLD_PRED_NAMES)
@@ -233,14 +266,25 @@ def preflight(data_root, mode, bundle):
         paths.extend(v4 / f'fold_{fold}' / name for fold in range(5) for name in WEIGHT_NAMES)
         paths += [v4 / name for name in FULL_WEIGHT_NAMES]
         paths.extend(v5 / CMP_NAME / 'standalone_fdeskew_109w_v12' / f'fold_{fold}' / 'fold_preds.npz' for fold in range(5))
-    failures = []
-    for path in paths:
+    return paths
+
+
+def preflight(data_root, mode, bundle=None, test_csv=None):
+    findings, failures = [], []
+    for path in required_input_paths(data_root, mode, bundle, test_csv):
+        item = {'path': str(path), 'status': 'FOUND'}
         try:
             check_file(path)
+            item['bytes'] = Path(path).stat().st_size
         except VerificationError as exc:
             failures.append(str(exc))
+            item.update(status='ERROR', message=str(exc))
+        findings.append(item)
     if failures:
-        raise VerificationError('Bộ dữ liệu chưa đầy đủ:\n' + '\n'.join(failures))
+        error = VerificationError('Bộ dữ liệu chưa đầy đủ:\n' + '\n'.join(failures))
+        error.input_checks = findings
+        raise error
+    return findings
 
 
 
@@ -369,10 +413,10 @@ def c5_surgical_surplus_deficit_resolver(base_labels, p_grand22, p_hier_all, p_a
     return preds_surg, preds_bal, audit_candidates, surgical_swaps, bal_swaps
 
 def replay_historical_submissions(pillars):
-    """Faithfully replay Cell 4, 5, 6, 7, 8, 9, including their explicit edits.
+    """Replay the five main submissions from Cell 4, 5, 6, 7 and 9.
 
     Cell 6 uses a zero-based row assignment and excludes four row positions.
-    Cell 7–9 edit IDs. These are historical choices, not learned inference rules.
+    Cell 7 and 9 edit IDs. These are historical choices, not learned inference rules.
     """
     ids = pillars['test_ids']
     if len(ids) != 550:
@@ -416,16 +460,12 @@ def replay_historical_submissions(pillars):
         return result
 
     chain = edit_by_id(master, {'115': 13, '476': 13, '78': 18})
-    plus481 = edit_by_id(chain, {'481': 18})
-    plus_both = edit_by_id(plus481, {'234': 16})
     final = edit_by_id(chain, {'234': 16})
     return {
         'submission_v4_cell4_ultimate_master.csv': c4,
         'submission_v4_cell5_surgical_master.csv': c5,
         'submission_v4_cell6_topological_swa_master.csv': master,
         'submission_v4_cell6_2hop_chain_19_13_18.csv': chain,
-        'submission_v4_cell6_2hop_plus_481_to_18.csv': plus481,
-        'submission_v4_cell6_2hop_plus_481_and_234.csv': plus_both,
         'submission_v4_cell6_final_single_best.csv': final,
     }
 
@@ -523,7 +563,22 @@ def load_inference_cell(index):
     return module
 
 
-def run_weights_inference_on_test(data_root, frame, report):
+def read_pixels(frame):
+    columns = [f'pixel{i}' for i in range(784)]
+    require_columns(frame, columns, 'test CSV')
+    if not len(frame):
+        raise VerificationError('test CSV phải có ít nhất một ảnh.')
+    try:
+        pixels = frame[columns].to_numpy(dtype=np.float64)
+    except (TypeError, ValueError) as exc:
+        raise VerificationError('test CSV: pixel phải là số nguyên trong [0,255].') from exc
+    if not np.isfinite(pixels).all() or (pixels < 0).any() or (pixels > 255).any() or not np.equal(pixels, np.floor(pixels)).all():
+        raise VerificationError('test CSV: pixel phải là số nguyên trong [0,255].')
+    return pixels.astype(np.uint8)
+
+
+def run_v4_inference_on_pixels(data_root, pixels, report):
+    """Only image pixels enter the 28 v4 models; no IDs, labels or NPZ inputs."""
     import torch
     c1, c2, c4, c5, c6 = [load_inference_cell(i) for i in (1, 2, 4, 5, 6)]
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -534,17 +589,15 @@ def run_weights_inference_on_test(data_root, frame, report):
         torch.backends.cudnn.benchmark = False
         torch.backends.cuda.matmul.allow_tf32 = False
     report['device'] = str(device)
-    print(f'[WEIGHTS] 28 mô hình v4 trên {device}; phần v12 vẫn dùng cache, không train.')
+    report['torch_version'] = torch.__version__
+    report['torch_cuda_version'] = torch.version.cuda
+    print(f'[V4] 28 mô hình v4 trên {device}.', flush=True)
     cmp_dir = data_root / V5_NAME / CMP_NAME
     config_path = check_file(cmp_dir / 'config.json')
     config = json.loads(config_path.read_text(encoding='utf-8'))
     levels = np.asarray(config['renderer']['gray_levels'], dtype=np.float64)
-    pixel_columns = [f'pixel{i}' for i in range(784)]
-    require_columns(frame, pixel_columns, 'test.csv')
-    pixels = frame[pixel_columns].to_numpy(dtype=np.float64)
-    if not np.isfinite(pixels).all() or (pixels < 0).any() or (pixels > 255).any() or not np.equal(pixels, np.floor(pixels)).all():
-        raise VerificationError('test.csv: pixel phải là số nguyên trong [0,255].')
-    pixels = pixels.astype(np.uint8)
+    if levels.ndim != 1 or not len(levels) or not np.isfinite(levels).all() or (levels < 0).any() or (levels > 255).any():
+        raise VerificationError('config.json: renderer.gray_levels phải là dãy hữu hạn trong [0,255].')
     print('[WEIGHTS] Trích xuất các góc nhìn hình học...')
     xd, xl, xr, geometry = c1.v4_precompute_multi_mlp_views_gpu(pixels, levels, device)
     specs = [(0.40, 0., 0.), (0.15, -0.05, 0.), (0.15, 0.05, 0.), (0.15, 0., -1.), (0.15, 0., 1.)]
@@ -563,31 +616,100 @@ def run_weights_inference_on_test(data_root, frame, report):
         # Existing checkpoints also contain NumPy metadata; use only trusted project checkpoints.
         checkpoint = torch.load(check_file(path), map_location='cpu', weights_only=False)
         model.load_state_dict(checkpoint['model'], strict=True)
+        model.eval()
         del checkpoint
-        result = validate_probs(predict(model, architecture), len(frame), path.name)
+        result = validate_probs(predict(model, architecture), len(pixels), path.name)
         del model
         if device.type == 'cuda':
             torch.cuda.empty_cache()
         return result
     all_folds = [[] for _ in range(5)]
-    anchor_folds = []
     v4 = data_root / 'v4_hier_multi_mlp'
     for fold in range(5):
         for architecture, filename in enumerate(WEIGHT_NAMES):
             print(f'[WEIGHTS] fold {fold}/4 — {filename}', flush=True)
             all_folds[architecture].append(from_checkpoint(v4 / f'fold_{fold}' / filename, architecture))
-        archive = load_npz(cmp_dir / 'standalone_fdeskew_109w_v12' / f'fold_{fold}' / 'fold_preds.npz', ['te_fd', 'te_o_s7', 'te_o_s29'])
-        for key in archive:
-            validate_probs(archive[key], len(frame), f'v12 fold{fold}/{key}')
-        anchor_folds.append(0.50 * archive['te_fd'] + 0.50 * (0.55 * archive['te_o_s7'] + 0.45 * archive['te_o_s29']))
-    result = dict(test_ids=frame['id'].to_numpy(dtype=str))
+    result = {}
     for key, values in zip(('te_s7_ens', 'te_s29_ens', 'te_u20_ens', 'te_dp5_ens', 'te_t6_ens'), all_folds):
         result[key] = np.mean(values, axis=0)
     for architecture, key, filename in zip((2, 3, 4), ('te_u20_full', 'te_dp5_full', 'te_t6_full'), FULL_WEIGHT_NAMES):
         print(f'[WEIGHTS] full data — {filename}', flush=True)
         result[key] = from_checkpoint(v4 / filename, architecture)
+    return result
+
+
+def run_weights_inference_on_test(data_root, frame, report):
+    result = run_v4_inference_on_pixels(data_root, read_pixels(frame), report)
+    result['test_ids'] = frame['id'].to_numpy(dtype=str)
+    print('[WEIGHTS] Phần v12 vẫn dùng cache lịch sử, không train.')
+    anchor_folds = []
+    for fold in range(5):
+        path = data_root / V5_NAME / CMP_NAME / 'standalone_fdeskew_109w_v12' / f'fold_{fold}' / 'fold_preds.npz'
+        archive = load_npz(path, ['te_fd', 'te_o_s7', 'te_o_s29'])
+        for key in archive:
+            validate_probs(archive[key], len(frame), f'v12 fold{fold}/{key}')
+        anchor_folds.append(0.50 * archive['te_fd'] + 0.50 * (0.55 * archive['te_o_s7'] + 0.45 * archive['te_o_s29']))
     result['te_v12_ens'] = np.mean(anchor_folds, axis=0)
     return result
+
+
+def model_only_probabilities(pillars, rows):
+    # float64 accumulation, fixed weights, independent argmax for each image.
+    result = np.zeros((rows, 11), dtype=np.float64)
+    for name, weight in MODEL_ONLY_WEIGHTS.items():
+        result += weight * validate_probs(pillars[name], rows, name).astype(np.float64)
+    return validate_probs(result, rows, 'model-only ensemble')
+
+
+def run_model_only_prediction(data_root, test_csv, run_dir, report):
+    """Bind this run to its inputs and export directly checkable argmax labels."""
+    paths = [check_file(path).resolve() for path in required_input_paths(data_root, 'predict', test_csv=test_csv)]
+    before = {str(path): sha256_file(path) for path in paths}
+    frame = read_ids(test_csv)
+    pixels = read_pixels(frame)
+    pillars = run_v4_inference_on_pixels(data_root, pixels, report)
+    probabilities = model_only_probabilities(pillars, len(frame))
+    labels = probabilities.argmax(axis=1) + 10
+    ids = frame['id'].to_numpy(dtype=str)
+    submission = run_dir / 'submission_model_only.csv'
+    probability_csv = run_dir / 'probabilities_model_only.csv'
+    pd.DataFrame({'id': ids, 'label': labels}).to_csv(submission, index=False, lineterminator='\n')
+    probability_frame = pd.DataFrame(probabilities, columns=[f'p{label}' for label in range(10, 21)])
+    probability_frame.insert(0, 'id', ids)
+    probability_frame.to_csv(probability_csv, index=False, float_format='%.17g', lineterminator='\n')
+    # Check the actual files the BTC receives, not only the in-memory arrays.
+    exported_probabilities = pd.read_csv(probability_csv, dtype={'id': str}, keep_default_na=False, float_precision='round_trip')
+    exported_submission = pd.read_csv(submission, dtype={'id': str}, keep_default_na=False)
+    saved_probs = validate_probs(exported_probabilities.drop(columns='id').to_numpy(), len(frame), 'exported probabilities')
+    if (not np.array_equal(exported_probabilities['id'], ids)
+            or not np.array_equal(exported_submission['id'], ids)
+            or not np.array_equal(exported_submission['label'], saved_probs.argmax(axis=1) + 10)):
+        raise VerificationError('CSV đầu ra không khớp ID hoặc argmax của xác suất đã xuất.')
+    after = {str(path): sha256_file(path) for path in paths}
+    if before != after:
+        raise VerificationError('Một đầu vào đã thay đổi trong lúc suy luận; không xác nhận kết quả lần chạy này.')
+    outputs = [{'file': path.name, 'sha256': sha256_file(path)} for path in (submission, probability_csv)]
+    report['prediction'] = {
+        'n': len(frame), 'test_csv': str(test_csv), 'checkpoints': 28,
+        'ensemble': 'Cell 6 te_hier28 before v12 gate; float64 weighted accumulation',
+        'branch_weights': dict(MODEL_ONLY_WEIGHTS), 'fold_reduction': 'arithmetic mean of 5 folds for each *_ens branch',
+        'label_rule': '10 + argmax(p10, ..., p20); ties select the smallest label',
+        'model_inputs': 'pixel0..pixel783 only; id is copied to output only',
+        'ignored_columns': [str(column) for column in frame if column != 'id' and column not in {f'pixel{i}' for i in range(784)}],
+        'cached_predictions_used': False, 'historical_postprocessing_used': False,
+        'reference_submissions_used': False, 'exported_argmax_check': True,
+        'input_hashes_unchanged': True, 'inputs': [{'path': path, 'sha256': digest} for path, digest in before.items()],
+        'outputs': outputs,
+        'class_counts': {str(label): int((labels == label).sum()) for label in range(10, 21)},
+        'scope': 'Ghi nhận suy luận lần này; BTC cần tự chạy mã đã rà soát trên test giữ kín. Không chứng minh nguồn gốc nhãn submission lịch sử hoặc việc train không rò rỉ.',
+    }
+    (run_dir / 'prediction_manifest.json').write_text(json.dumps({
+        'started_at': report['started_at'], 'prediction': report['prediction'],
+        'environment': report.get('environment'), 'device': report.get('device'),
+        'torch_version': report.get('torch_version'), 'torch_cuda_version': report.get('torch_cuda_version'),
+    }, ensure_ascii=False, indent=2, allow_nan=False), encoding='utf-8')
+    report.update(status='PREDICTED', summary=f'Đã suy luận {len(frame)} ảnh từ 28 trọng số v4; CSV nhãn khớp argmax của CSV xác suất đã xuất. Chưa đánh giá độ chính xác test.')
+    print(f'[PREDICT] {submission}')
 
 
 def compare_submission(path, ids, labels, reference, out_dir):
@@ -595,7 +717,7 @@ def compare_submission(path, ids, labels, reference, out_dir):
     pd.DataFrame({'id': ids, 'label': labels}).to_csv(path, index=False, lineterminator='\n')
     result = {'file': path.name, 'sha256': sha256_file(path), 'n': len(ids), 'class_counts': {str(c): int((labels == c).sum()) for c in range(10, 21)}}
     if not reference.is_file():
-        result.update(status='MISSING_REFERENCE', message='Đã tạo CSV; chưa có bản tham chiếu để đối chiếu.')
+        result.update(status='MISSING_REFERENCE', message='Đã tạo CSV; thiếu bản tham chiếu để đối chiếu.')
         return result
     try:
         ref = read_ids(reference)
@@ -625,7 +747,7 @@ def run_legacy_training(data_root, out_dir):
     import torch
     if not torch.cuda.is_available():
         raise VerificationError('--mode train cần GPU CUDA theo các cell gốc. Dùng --mode fast để kiểm tra trên CPU.')
-    paths = [check_file(source_dir() / f'cell_{i:02d}.py') for i in range(1, 10)]
+    paths = [check_file(source_dir() / f'cell_{i:02d}.py') for i in TRAIN_CELLS]
     try:
         import google.colab  # noqa: F401
     except ImportError:
@@ -667,14 +789,26 @@ def write_report(report, out_dir, latest_dir):
         deltas = ''.join(f'<tr><td>{escaped(key)}</td><td>{item["max_abs_delta"]:.7g}</td><td>{"PASS" if item["within_tolerance"] else "FAIL"}</td></tr>' for key, item in report.get('weights_vs_cache', {}).items())
         weights_table = '<h2>Suy luận trọng số so với cache</h2><table><tr><th>Nhánh</th><th>Độ lệch lớn nhất</th><th>Dung sai</th></tr>' + deltas + '</table>' if deltas else ''
         status = report['status']
-        color = '#087f5b' if status == 'PASS' else '#a61e4d'
+        color = '#087f5b' if status in ('PASS', 'INPUTS_READY', 'PREDICTED', 'TRAIN_COMPLETED') else '#a61e4d'
         notes = ''.join(f'<li>{escaped(note)}</li>' for note in report['notes'])
+        checks = report.get('input_checks', [])
+        check_rows = ''.join(f'<tr><td>{escaped(item["path"])}</td><td>{escaped(item["status"])}</td><td>{escaped(item.get("message", str(item.get("bytes", 0)) + " bytes"))}</td></tr>' for item in checks)
+        input_section = '<h2>Kiểm tra đầu vào</h2><p>Chỉ xác nhận file tồn tại, không rỗng và đã tải dữ liệu Git LFS. Chưa xác nhận nội dung, GPU hay việc chạy thành công.</p><table><tr><th>File</th><th>Trạng thái</th><th>Chi tiết</th></tr>' + check_rows + '</table>' if checks and (report.get('check_only') or report.get('error')) else ''
+        metrics_section = '<h2>Độ chính xác từ cache validation</h2><table><tr><th>Tập</th><th>Miền</th><th>Đúng / tổng</th><th>Độ chính xác</th></tr>' + rows + '</table>' if rows else ''
+        submissions_section = '<h2>Đối chiếu submission</h2><table><tr><th>CSV được tạo</th><th>Trạng thái</th><th>Đối chiếu</th></tr>' + comparisons + '</table>' if comparisons else ''
+        prediction = report.get('prediction')
+        prediction_section = ''
+        if prediction:
+            links = ' · '.join(f'<a href="{escaped(prefix + item["file"])}">{escaped(item["file"])}</a>' for item in prediction['outputs'])
+            prediction_section = '<h2>Suy luận từ trọng số v4</h2><p>Nhãn = 10 + argmax của 11 xác suất ensemble. ID chỉ được sao chép vào đầu ra. Không áp quota số mẫu mỗi lớp.</p><p>' + links + ' · <a href="' + escaped(prefix + 'prediction_manifest.json') + '">Thông số và SHA256 đầu vào/đầu ra</a></p><p>BTC cần tự chạy mã và trọng số đã chốt trên test giữ kín để xác minh độc lập. Báo cáo này không chứng minh các CSV lịch sử không bị sửa.</p>'
         body = f'''<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>MNIST 10–20 — Kiểm tra BTC</title>
 <style>body{{font:16px system-ui,sans-serif;background:#f2f5f9;color:#17243b;margin:0}}main{{max-width:1150px;margin:40px auto;background:white;border-radius:16px;padding:32px}}h1{{font-size:28px}}.status{{color:{color};font-size:26px;font-weight:700}}table{{border-collapse:collapse;width:100%;font-size:14px}}td,th{{padding:11px;text-align:left;border-bottom:1px solid #dde3ed;overflow-wrap:anywhere}}th{{background:#edf2f8}}a{{color:#1558a6}}pre{{white-space:pre-wrap;background:#fff0f3;padding:16px}}li{{margin:9px 0}}.PASS{{color:#087f5b;font-weight:700}}.FAIL,.MISSING_REFERENCE{{color:#a61e4d;font-weight:700}}small{{color:#58677d}}@media(max-width:700px){{main{{margin:10px;padding:16px}}table{{font-size:12px}}}}</style>
 <main><h1>MNIST 10–20 · Kiểm tra BTC</h1><p class="status">{escaped(status)}</p><p>{escaped(report.get('summary', ''))}</p><small>{escaped(report['started_at'])} · Chế độ: {escaped(report['mode'])} · {report.get('elapsed_seconds', 0):.2f} giây</small>
 <pre {"" if report.get('error') else "hidden"}>{escaped(report.get('error', ''))}</pre>
-<h2>Độ chính xác từ cache validation</h2><table><tr><th>Tập</th><th>Miền</th><th>Đúng / tổng</th><th>Độ chính xác</th></tr>{rows}</table>
-<h2>Đối chiếu submission</h2><table><tr><th>CSV được tạo</th><th>Trạng thái</th><th>Đối chiếu</th></tr>{comparisons}</table>
+{input_section}
+{metrics_section}
+{submissions_section}
+{prediction_section}
 {weights_table}
 <p><a href="{escaped(prefix + 'verification.log')}">Nhật ký</a> · <a href="{escaped(prefix + 'verification_report.json')}">Báo cáo JSON</a></p>
 <h2>Phạm vi kiểm tra</h2><ul>{notes}</ul></main></html>'''
@@ -685,17 +819,24 @@ def write_report(report, out_dir, latest_dir):
 
 def build_parser():
     parser = argparse.ArgumentParser(description='MNIST 10–20: tái lập và kiểm tra kết quả đã lưu.')
-    parser.add_argument('--mode', choices=['fast', 'weights', 'train'], default='fast', help='fast: cache trên CPU; weights: 28 mô hình v4 + cache v12; train: chạy lại cell gốc, cần dữ liệu trung gian và CUDA.')
+    parser.add_argument('--mode', choices=['fast', 'weights', 'train', 'predict'], default='fast', help='fast: cache; weights: 28 v4 + cache v12; train: cell gốc cần CUDA; predict: nhãn argmax từ 28 v4, CSV test bất kỳ.')
     parser.add_argument('--data-root', type=Path, default=DATA_ROOT)
+    parser.add_argument('--test-csv', type=Path, help='CSV mới cho --mode predict: id và pixel0..pixel783; mặc định MNIST_data/test.csv.')
     parser.add_argument('--output-dir', type=Path, default=REPO_ROOT / 'verified_submissions')
     parser.add_argument('--cache', type=Path, help='Chọn chính xác bundle xác suất Cell 6 thay vì tự tìm session.')
     parser.add_argument('--no-install', action='store_true', help='Không tự cài thư viện thiếu (máy offline/đã chuẩn bị sẵn).')
+    parser.add_argument('--check-only', action='store_true', help='Chỉ kiểm tra file đầu vào: không cài thư viện, không chạy suy luận/huấn luyện.')
     parser.add_argument('--open-report', action='store_true', help='Mở báo cáo HTML khi hoàn tất hoặc có lỗi.')
     return parser
 
 
 def main(argv=None):
     args = build_parser().parse_args(argv)
+    if args.test_csv is not None and args.mode != 'predict':
+        build_parser().error('--test-csv chỉ dùng với --mode predict.')
+    if args.mode == 'predict' and args.cache is not None:
+        build_parser().error('--mode predict không nhận cache dự đoán.')
+    INPUT_FILES.clear()
     if sys.version_info < (3, 10):
         print('Cần Python 3.10 trở lên. Có thể dùng Python 3.12 cho môi trường này.')
         return 2
@@ -703,17 +844,28 @@ def main(argv=None):
         if hasattr(stream, 'reconfigure'):
             stream.reconfigure(encoding='utf-8', errors='replace')
     args.data_root = args.data_root.resolve()
+    test_csv = args.test_csv.resolve() if args.test_csv is not None else args.data_root / 'test.csv'
     args.output_dir = args.output_dir.resolve()
     args.output_dir.mkdir(parents=True, exist_ok=True)
     run_dir = args.output_dir / ('run_' + datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ') + '_' + uuid.uuid4().hex[:6])
     run_dir.mkdir()
-    report = {'status': 'RUNNING', 'mode': args.mode, 'started_at': datetime.now(timezone.utc).isoformat(), 'data_root': str(args.data_root), 'run_directory': str(run_dir), 'notes': [
+    report = {'status': 'RUNNING', 'mode': args.mode, 'check_only': args.check_only, 'started_at': datetime.now(timezone.utc).isoformat(), 'data_root': str(args.data_root), 'run_directory': str(run_dir), 'notes': [
         'fast tính lại chỉ số OOF/holdout và tái lập CSV từ cache; không chạy lại mô hình hoặc huấn luyện.',
         'weights chạy lại 28 mô hình v4; nhánh v12 và chỉ số OOF/holdout vẫn lấy cache. Thời gian tùy CPU/GPU.',
         'Hậu xử lý bám Cell 4–9 gốc, gồm sửa dòng 147 và các sửa theo ID. Đây là tái lập kết quả lịch sử trên 550 mẫu gốc, không phải bộ dự đoán cho test mới.',
         'Khớp submission tham chiếu không đồng nghĩa đúng nhãn test. Không tính độ chính xác test/Kaggle khi không có nhãn thật.',
         'Chỉ số OOF được tính từ cache; kiểm tra này không tự xác nhận toàn bộ quy trình train không rò rỉ dữ liệu.',
+        'Chỉ tạo và đối chiếu 5 submission chính từ Cell 4, 5, 6, 7 và 9. Cả 5 bản đều cần CSV tham chiếu.',
     ]}
+    if args.mode == 'predict':
+        report['notes'] = [
+            'Suy luận trực tiếp từ 28 trọng số v4; chỉ pixel0..pixel783 đi vào mô hình. ID chỉ dùng để ghi CSV.',
+            'Ensemble cố định theo te_hier28 trong Cell 6 trước cổng v12; nhãn = 10 + argmax. Hòa xác suất chọn nhãn nhỏ nhất.',
+            'Không đọc cache dự đoán, nhánh v12, nhãn tham chiếu hoặc dữ liệu huấn luyện. Không chỉnh theo dòng/ID hoặc cân số lượng lớp.',
+            'PREDICTED xác nhận luồng dự đoán đã hoàn tất và CSV nhãn khớp argmax xác suất xuất ra; không phải điểm test.',
+            'SHA256 ràng buộc các file của lần chạy này. BTC cần tự giữ test và chạy mã/trọng số đã chốt để có xác minh độc lập.',
+            'Không thể dùng kết quả này để khẳng định các CSV lịch sử không có sửa theo mẫu, hoặc quá trình train không rò rỉ.',
+        ]
     started = time.perf_counter()
     exit_code = 1
     child_code = None
@@ -723,21 +875,27 @@ def main(argv=None):
         try:
             print('MNIST 10–20 | KIỂM TRA KẾT QUẢ CHO BTC')
             print(f'Chế độ: {args.mode} | Dữ liệu: {args.data_root}')
-            if args.mode != 'train':
+            if args.mode == 'predict':
+                report['input_checks'] = preflight(args.data_root, 'predict', test_csv=test_csv)
+            elif args.mode != 'train':
                 bundle = resolve_bundle(args.data_root / 'v4_hier_multi_mlp', args.cache)
-                preflight(args.data_root, args.mode, bundle)
+                report['input_checks'] = preflight(args.data_root, args.mode, bundle)
                 report['probability_bundle'] = str(bundle)
             else:
-                for index in range(1, 10):
-                    check_file(source_dir() / f'cell_{index:02d}.py')
-                if not args.data_root.is_dir():
-                    raise VerificationError(f'Thiếu thư mục dữ liệu: {args.data_root}')
-            child_code = ensure_dependencies(args.mode, args.no_install)
-            if child_code is None:
+                report['input_checks'] = preflight(args.data_root, args.mode)
+            if args.check_only:
+                report.update(status='INPUTS_READY', summary=f'Đã tìm đủ {len(report["input_checks"])} file đầu vào cho {args.mode}. Chưa cài thư viện, kiểm tra GPU, suy luận hoặc huấn luyện.')
+                exit_code = 0
+            else:
+                child_code = ensure_dependencies(args.mode, args.no_install)
+            if child_code is None and not args.check_only:
                 global np, pd
                 np, pd = importlib.import_module('numpy'), importlib.import_module('pandas')
                 report['environment'] = {'python': sys.version, 'platform': platform.platform(), 'numpy': np.__version__, 'pandas': pd.__version__}
-                if args.mode == 'train':
+                if args.mode == 'predict':
+                    run_model_only_prediction(args.data_root, test_csv, run_dir, report)
+                    exit_code = 0
+                elif args.mode == 'train':
                     run_legacy_training(args.data_root, run_dir)
                     report.update(status='TRAIN_COMPLETED', summary='Đã chạy cell gốc. Chạy chế độ fast để đối chiếu các cache/submission vừa tạo.')
                     exit_code = 0
@@ -754,7 +912,7 @@ def main(argv=None):
                         pillars = run_weights_inference_on_test(args.data_root, frame, report)
                         deltas = {key: {'max_abs_delta': float(np.abs(pillars[key] - cached[key]).max()), 'within_tolerance': bool(np.allclose(pillars[key], cached[key], atol=1e-4, rtol=1e-4))} for key in PILLAR_KEYS}
                         report['weights_vs_cache'] = deltas
-                    print('\n[2/3] Tái lập đúng các bước Cell 4–9 gốc (gồm sửa theo dòng/ID)...')
+                    print('\n[2/3] Tái lập 5 submission chính từ Cell 4, 5, 6, 7 và 9...')
                     generated = replay_historical_submissions(pillars)
                     print('\n[3/3] Đối chiếu ID, nhãn, thứ tự và SHA256...')
                     comparisons = []
@@ -767,16 +925,26 @@ def main(argv=None):
                         comparisons.append(result)
                         print(f'  {result["status"]:17} {filename}: {result["message"]}')
                     report['submissions'] = comparisons
+                    required_count = len(comparisons)
+                    required_passed = sum(item['status'] == 'PASS' for item in comparisons)
+                    report['reference_policy'] = {
+                        'required_total': required_count,
+                        'required_passed': required_passed,
+                        'existing_reference_mismatch_is_failure': True,
+                    }
                     failed = any(item['status'] == 'FAIL' for item in comparisons)
                     incomplete = any(item['status'] == 'MISSING_REFERENCE' for item in comparisons)
                     drift = any(not item['within_tolerance'] for item in report.get('weights_vs_cache', {}).values())
                     report['status'] = 'FAIL' if failed or drift else ('INCOMPLETE' if incomplete else 'PASS')
-                    report['summary'] = {'PASS': 'Đã tính lại chỉ số validation và mọi CSV đều khớp ID, nhãn, thứ tự với bản tham chiếu.', 'FAIL': 'Có kết quả khác bản tham chiếu/cache. Xem bảng đối chiếu và báo cáo JSON.', 'INCOMPLETE': 'Đã tạo CSV và tính chỉ số; còn thiếu bản tham chiếu để xác nhận toàn bộ.'}[report['status']]
+                    pass_summary = f'{required_passed}/{required_count} submission chính khớp ID, nhãn và thứ tự với bản tham chiếu; đã tính lại chỉ số validation.'
+                    report['summary'] = {'PASS': pass_summary, 'FAIL': 'Có kết quả khác bản tham chiếu/cache. Xem bảng đối chiếu và báo cáo JSON.', 'INCOMPLETE': 'Đã tạo CSV và tính chỉ số; còn thiếu bản tham chiếu của submission chính.'}[report['status']]
                     exit_code = 0 if report['status'] == 'PASS' else 1
         except KeyboardInterrupt:
             report.update(status='CANCELLED', error='Người dùng đã dừng kiểm tra.', summary='Kiểm tra bị dừng.')
             exit_code = 130
         except Exception as exc:
+            if hasattr(exc, 'input_checks'):
+                report['input_checks'] = exc.input_checks
             report.update(status='ERROR', error=str(exc), summary='Chưa hoàn tất kiểm tra. Chi tiết lỗi được lưu bên dưới và trong nhật ký.')
             print(f'\n[LỖI] {exc}')
             traceback.print_exc()
@@ -787,7 +955,10 @@ def main(argv=None):
     if child_code is not None:
         return child_code
     report['elapsed_seconds'] = time.perf_counter() - started
-    report['inputs'] = [{'path': str(path), 'sha256': sha256_file(path)} for path in sorted(INPUT_FILES) if path.is_file()]
+    if args.check_only:
+        report['inputs'] = [{'path': str(path), 'bytes': path.stat().st_size} for path in sorted(INPUT_FILES) if path.is_file()]
+    else:
+        report['inputs'] = [{'path': str(path), 'sha256': sha256_file(path)} for path in sorted(INPUT_FILES) if path.is_file()]
     write_report(report, run_dir, args.output_dir)
     print(f'\n[{report["status"]}] {report["summary"]}\nBáo cáo: {args.output_dir / "verification_report.html"}')
     if args.open_report:
